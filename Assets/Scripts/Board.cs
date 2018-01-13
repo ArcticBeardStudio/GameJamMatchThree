@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Data;
 
 public class Board : MonoBehaviour
 {
@@ -10,40 +11,45 @@ public class Board : MonoBehaviour
 
     public int boarderSize;
 
-    public GameObject tilePrefab;
+    public Tile[] tilePrefabs;
 
-    Tile[,] m_allTiles;
+    Tile[,] tiles;
+    BoardData boardData;
 
-
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
-        m_allTiles = new Tile[width, height];
-        SetupTiles();
         //SetupCamera();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
+        Init();
+    }
 
-    void SetupTiles()
+    // Update is called once per frame
+    void Update()
     {
-        for(int i=0; i < width; i++)
+
+    }
+
+    void OnTileUpdate(int x, int y, TileTypes tileType)
+    {
+        if (tiles[y, x] != null)
         {
-            for(int j=0;j<height;j++)
-            {
-                GameObject tile = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
-
-                tile.name = "Tile (" + i + "," + j + ")";
-
-                m_allTiles[i, j] = tile.GetComponent<Tile>();
-
-                tile.transform.parent = transform;
-            }
+            Destroy(tiles[y, x].gameObject);
         }
+
+        Tile newTile = Instantiate<Tile>(tilePrefabs[(int)tileType], transform);
+        newTile.Init(x, y, this);
+        tiles[y, x] = newTile;
+    }
+
+    void Init()
+    {
+        tiles = new Tile[height, width];
+        boardData = new BoardData(width, height, new TileUpdate(OnTileUpdate));
+    }
+
+    public bool SwapTiles(Tile t1, Tile t2)
+    {
+        return boardData.SwapTiles(t1.x, t1.y, t2.x, t2.y);
     }
 
     /*void SetupCamera()
