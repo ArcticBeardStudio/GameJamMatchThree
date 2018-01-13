@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    int index;
-
-    public int GetHealth() { return 0; }
-    public int GetIndex() { return 0; }
+    public int index;
+    public int health;
 
     public Board GetBoard() { return null; }
 
     public bool CanMove() { return false; }
 
-    public void ApplyDamage(int amount) { }
+    public void ApplyDamage(int amount)
+    {
+        health -= amount;
+    }
 }
