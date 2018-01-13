@@ -15,4 +15,14 @@ public class Player : MonoBehaviour
     {
         health -= amount;
     }
+
+    public void Init(int index) {
+        this.index = index;
+        health = 100;
+    }
+
+    void Start()
+    {
+        
+    }
 }
