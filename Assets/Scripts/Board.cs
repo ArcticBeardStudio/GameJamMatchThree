@@ -40,8 +40,8 @@ public class SwapInfo : ChangeInfo
         tile2.y = previousTilePos.y;
         board.SetTileType(tile, previousTileType);
         board.SetTileType(tile2, previousTile2Type);
-        board.RemoveMatches(new Vector2Int(tile.x, tile.y), board.GetTileType(tile));
-        board.RemoveMatches(new Vector2Int(tile2.x, tile2.y), board.GetTileType(tile2));
+        board.FindMatches(new Vector2Int(tile.x, tile.y), board.GetTileType(tile));
+        board.FindMatches(new Vector2Int(tile2.x, tile2.y), board.GetTileType(tile2));
 
         isComplete = true;
         callback();        
@@ -204,7 +204,9 @@ public class Board : MonoBehaviour
     {
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
-        
+
+        var allFoundMatches = new List<Vector2Int>();
+
         //Check horizontal matches
         for (int i=0;i<width;i++)
         {
@@ -219,7 +221,6 @@ public class Board : MonoBehaviour
             Debug.Log("Found horizontal match from" + horizontalMatches[0] + " to " + horizontalMatches[horizontalMatches.Count - 1]);
             for (int i = 0; i < horizontalMatches.Count; i++)
             {
-                RemoveTile(horizontalMatches[i].x, horizontalMatches[i].y);
             }
         }
 
@@ -237,7 +238,6 @@ public class Board : MonoBehaviour
             Debug.Log("Found vertical match from" + verticalMatches[0] + " to " + verticalMatches[verticalMatches.Count - 1]);
             for(int i=0;i<verticalMatches.Count;i++)
             {
-                RemoveTile(verticalMatches[i].x, verticalMatches[i].y);
             }
         }
     }
@@ -245,8 +245,8 @@ public class Board : MonoBehaviour
     //Handles what happens when you remove a tile
     public void RemoveTile(int x, int y)
     {
-        /*var tile = GetTile(x, y);
+        var tile = GetTile(x, y);
         tile.Pop();
-        Destroy(tile.gameObject);*/
+        Destroy(tile.gameObject);
     }
 }
