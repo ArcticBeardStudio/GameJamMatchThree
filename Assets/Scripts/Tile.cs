@@ -20,7 +20,7 @@ public class Tile : MonoBehaviour
         transform.localPosition = board.GetTileLocalPosition(x, y);
 
         collider = gameObject.AddComponent<BoxCollider>();
-        collider.size = Vector3.one;
+        collider.size = new Vector3(1, 1, 0.1f);
     }
 
     public override string ToString()
