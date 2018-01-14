@@ -93,7 +93,7 @@ public class Board : MonoBehaviour
     {
         return GetTileType(tile.x, tile.y);
     }
-    
+
     public TileTypes GetRandomTileType()
     {
         return (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
@@ -104,6 +104,11 @@ public class Board : MonoBehaviour
         return tiles[y, x];
     }
 
+    public bool IsEmpty(int x, int y)
+    {
+        return GetTileType(x, y) == TileTypes.None;
+    }
+
     public void SetTileType(int x, int y, TileTypes tileType)
     {
         currentState[y, x] = tileType;
@@ -112,7 +117,7 @@ public class Board : MonoBehaviour
     {
         SetTileType(tile.x, tile.y, tileType);
     }
-    
+
     public void SetTile(int x, int y, Tile tile)
     {
         tiles[y, x] = tile;
@@ -129,6 +134,9 @@ public class Board : MonoBehaviour
     public void SwapResolved()
     {
         // Do after swap stuff
+        // If not filled
+        // Refill
+        // Else \/
         Vector2Int[] matches = FindMatches();
         removeStack.Begin();
         foreach (Vector2Int pos in matches)
@@ -146,6 +154,32 @@ public class Board : MonoBehaviour
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
+        FallGems();
+    }
+
+    public void FallGems()
+    {
+        swapStack.Begin();
+        for (int x = 0; x < width; x++)
+        {
+            int emptyY = -1;
+            for (int y = 0; y < height; y++)
+            {
+                if (IsEmpty(x, y) && emptyY < 0)
+                {
+                    emptyY = y;
+                    continue;
+                }
+                if (!IsEmpty(x, y) && emptyY >= 0)
+                {
+                    swapStack.Add(new SwapInfo(this, 
+                        new Vector2Int(x, y), 
+                        new Vector2Int(x, emptyY)
+                    ));
+                }
+            }
+        }
+        swapStack.End();
     }
 
     public Vector2Int[] FindMatches()
@@ -153,7 +187,7 @@ public class Board : MonoBehaviour
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
         var allFoundMatches = new List<Vector2Int>();
-        
+
         //Check horizontal matches
         for (int y = 0; y < height; y++)
         {
@@ -180,14 +214,14 @@ public class Board : MonoBehaviour
             for (int x = 1; x < width; x++)
             {
                 //If the current type is same as previous and not none, add to matches
-                if(GetTileType(x,y) == previousType && previousType != TileTypes.None)
+                if (GetTileType(x, y) == previousType && previousType != TileTypes.None)
                 {
                     horizontalMatches.Add(new Vector2Int(x, y));
                 }
                 //If we found horizontal matches (And previous type not same as current), add to foundMatches list and empty horizontal match, add the new type to the horizontal matches
-                else if(horizontalMatches.Count >= 3)
+                else if (horizontalMatches.Count >= 3)
                 {
-                    for(int i=0;i< horizontalMatches.Count; i++)
+                    for (int i = 0; i < horizontalMatches.Count; i++)
                     {
                         if (!allFoundMatches.Contains(horizontalMatches[i]))
                         {
@@ -235,7 +269,7 @@ public class Board : MonoBehaviour
             {
                 for (int i = 0; i < verticalMatches.Count; i++)
                 {
-                    if(!allFoundMatches.Contains(verticalMatches[i]))
+                    if (!allFoundMatches.Contains(verticalMatches[i]))
                     {
                         allFoundMatches.Add(verticalMatches[i]);
                     }

@@ -4,36 +4,47 @@ using UnityEngine;
 
 public class SwapInfo : ChangeInfo
 {
-    public Tile tile;
-    public Tile tile2;
+    public Vector2Int p1;
+    public Vector2Int p2;
 
-    public SwapInfo(Board board, Tile tile, Tile tile2)
+    public SwapInfo(Board board, Vector2Int p1, Vector2Int p2)
         :base(board)
     {
-        this.tile = tile;
-        this.tile2 = tile2;
+        this.p1 = p1;
+        this.p2 = p2;
+    }
+    public SwapInfo(Board board, Tile t1, Tile t2)
+        :base(board)
+    {
+        this.p1 = t1.boardPos;
+        this.p2 = t2.boardPos;
     }
 
     override public IEnumerator ChangeRoutine(System.Action callback)
     {
         yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
 
-        var previousTilePos = new Vector2Int(tile.x, tile.y);
-        var previousTile2Pos = new Vector2Int(tile2.x, tile2.y);
-        var previousTileType = board.GetTileType(tile);
-        var previousTile2Type = board.GetTileType(tile2);
+        Tile t1 = board.GetTile(p1.x, p1.y);
+        Tile t2 = board.GetTile(p2.x, p2.y);
 
-        tile.x = previousTile2Pos.x;
-        tile.y = previousTile2Pos.y;
-        tile2.x = previousTilePos.x;
-        tile2.y = previousTilePos.y;
-        board.SetTileType(tile, previousTileType);
-        board.SetTileType(tile2, previousTile2Type);
+        var previousType1 = board.GetTileType(p1.x, p1.y);
+        var previousType2 = board.GetTileType(p2.x, p2.y);
 
-        board.SetTile(tile.x, tile.y, tile);
-        board.SetTile(tile2.x, tile2.y, tile2);
-        tile.transform.localPosition = board.GetTileLocalPosition(tile.x, tile.y);
-        tile2.transform.localPosition = board.GetTileLocalPosition(tile2.x, tile2.y);
+        board.SetTileType(p1.x, p1.y, previousType2);
+        board.SetTileType(p2.x, p2.y, previousType1);
+
+        if (t1) {
+            t1.x = p2.x;
+            t1.y = p2.y;
+            board.SetTile(t1.x, t1.y, t1);
+            t1.transform.localPosition = board.GetTileLocalPosition(t1.x, t1.y);
+        }
+        if (t2) {
+            t2.x = p1.x;
+            t2.y = p1.y;
+            board.SetTile(t2.x, t2.y, t2);
+            t2.transform.localPosition = board.GetTileLocalPosition(t2.x, t2.y);
+        }
 
         isComplete = true;
         callback();        

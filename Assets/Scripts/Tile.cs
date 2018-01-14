@@ -10,6 +10,7 @@ public class Tile : MonoBehaviour
     public Board board { get; protected set; }
 
     new public BoxCollider collider { get; protected set; }
+    public Vector2Int boardPos { get { return new Vector2Int(x, y); } }
 
     public void Init(int x, int y, Board board)
     {
