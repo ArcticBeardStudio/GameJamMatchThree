@@ -15,15 +15,9 @@ public class Player : MonoBehaviour
     {
         health -= amount;
     }
-
-    public void Init(int index)
+    
+    void Update()
     {
-        this.index = index;
-        health = 100;
-    }
-
-    void Start()
-    {
-
+        
     }
 }
