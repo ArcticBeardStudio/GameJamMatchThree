@@ -13,13 +13,15 @@ public enum TileTypes
     None
 }
 
-public struct SwapInfo
+public class SwapInfo : ChangeInfo
 {
     public Tile tile;
     public Tile tile2;
 
-    public SwapInfo(Tile tile, Tile tile2)
+    public SwapInfo(Board board, Tile tile, Tile tile2)
+        :base(board)
     {
+
         this.tile = tile;
         this.tile2 = tile2;
     }
@@ -34,6 +36,8 @@ public class Board : MonoBehaviour
     float tileHeight { get { return settings.tileHeight; } }
     Tile[] tilePrefabs { get { return settings.tilePrefabs; } }
 
+    public ChangeStack<SwapInfo> swapStack;
+
     Tile[,] tiles;
     TileTypes[,] currentState;
 
@@ -41,7 +45,7 @@ public class Board : MonoBehaviour
     {
         Init();
     }
-    
+
     void OnDrawGizmos()
     {
         for (int y = 0; y < height; y++)
@@ -56,6 +60,8 @@ public class Board : MonoBehaviour
 
     public void Init()
     {
+        swapStack = new ChangeStack<SwapInfo>(SwapTiles, SwapResolved);
+
         tiles = new Tile[height, width];
         currentState = new TileTypes[height, width];
         SetupTiles();
@@ -167,7 +173,7 @@ public class Board : MonoBehaviour
         }
         return foundMatch;
     }*/
-    
+
     public void SwapTiles(SwapInfo swapperino)
     {
         var tile = swapperino.tile;
@@ -183,6 +189,20 @@ public class Board : MonoBehaviour
         tile2.y = previousTilePos.y;
         SetTileType(tile, previousTileType);
         SetTileType(tile2, previousTile2Type);
+    }
+    public IEnumerator SwapAnim(SwapInfo swapInfo)
+    {
+        yield return new WaitForSeconds(2.0f);
+        swapInfo.isComplete = true;
+    }
+    public void SwapResolved()
+    {
+        swapStack.Begin();
+        swapStack.Add(new SwapInfo(this,
+            GetTile(Random.Range(0, width), Random.Range(0, height)), 
+            GetTile(Random.Range(0, width), Random.Range(0, height))
+        ));
+        swapStack.End();
     }
 
     public void RemoveMatches()

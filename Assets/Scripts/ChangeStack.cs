@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class ChangeStack<T>
+public class ChangeStack<T> where T : ChangeInfo
 {
     public Action<T> stackCallback;
     public Action resolveCallback;

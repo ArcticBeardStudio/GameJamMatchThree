@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public int numSwaps = 0;
+
     public int index;
     public int health;
     
@@ -33,9 +35,12 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    var bajs = new SwapInfo(selected, tile);
-                    board.SwapTiles(bajs);
-                    
+                    var bajs = new SwapInfo(board, selected, tile);
+                    // board.SwapTiles(bajs);
+                    board.swapStack.Begin();
+                    board.swapStack.Add(bajs);
+                    board.swapStack.End();
+
                     selected = null;
                 }
                 //tile.Pop();
