@@ -209,9 +209,22 @@ public class Board : MonoBehaviour
             }
         }
 
+        //Checks if we found horizontal match, needed when the last tile is within a match.
+        if (horizontalMatches.Count >= 3)
+        {
+            for (int i = 0; i < horizontalMatches.Count; i++)
+            {
+                if (!allFoundMatches.Contains(horizontalMatches[i]))
+                {
+                    allFoundMatches.Add(horizontalMatches[i]);
+                }
+            }
+        }
+
+
         for (int x = 0; x < width; x++)
         {
-            //Checks if we found horizontal match, needed when the last tile is within a match.
+            //Checks if we found vertical match, needed when the last tile is within a match.
             if (verticalMatches.Count >= 3)
             {
                 for (int i = 0; i < verticalMatches.Count; i++)
@@ -270,6 +283,18 @@ public class Board : MonoBehaviour
             }
         }
 
+
+        //Checks if we found horizontal match, needed when the last tile is within a match.
+        if (verticalMatches.Count >= 3)
+        {
+            for (int i = 0; i < verticalMatches.Count; i++)
+            {
+                if (!allFoundMatches.Contains(verticalMatches[i]))
+                {
+                    allFoundMatches.Add(verticalMatches[i]);
+                }
+            }
+        }
 
         Debug.Log("Found matches is: " + allFoundMatches.Count);
         return allFoundMatches;
