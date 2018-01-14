@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ChangeStack<T> where T : ChangeInfo
 {
-    public Action<T> stackCallback;
     public Action resolveCallback;
 
     public int length { get { return stack == null ? 0 : stack.Count; } }
@@ -13,9 +12,8 @@ public class ChangeStack<T> where T : ChangeInfo
     bool isOpen;
     List<T> stack;
 
-    public ChangeStack(Action<T> stackCallback, Action resolveCallback)
+    public ChangeStack(Action resolveCallback)
     {
-        this.stackCallback = stackCallback;
         this.resolveCallback = resolveCallback;
 
         isOpen = false;
@@ -40,10 +38,24 @@ public class ChangeStack<T> where T : ChangeInfo
     public void End()
     {
         isOpen = false;
-        foreach (T change in stack)
+        foreach (T change in stack.ToArray())
         {
-            stackCallback(change);
+            change.DoChange(CheckResolved);
         }
-        resolveCallback();
+    }
+
+    void CheckResolved() 
+    {
+        foreach (T change in stack.ToArray())
+        {
+            if (change.isComplete) 
+            {
+                stack.Remove(change);
+            }
+        }
+        if (stack.Count <= 0)
+        {
+            resolveCallback();
+        }
     }
 }

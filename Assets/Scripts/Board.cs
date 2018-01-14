@@ -24,6 +24,28 @@ public class SwapInfo : ChangeInfo
         this.tile = tile;
         this.tile2 = tile2;
     }
+
+    override public IEnumerator ChangeRoutine(System.Action callback)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        var previousTilePos = new Vector2Int(tile.x, tile.y);
+        var previousTile2Pos = new Vector2Int(tile2.x, tile2.y);
+        var previousTileType = board.GetTileType(tile);
+        var previousTile2Type = board.GetTileType(tile2);
+
+        tile.x = previousTile2Pos.x;
+        tile.y = previousTile2Pos.y;
+        tile2.x = previousTilePos.x;
+        tile2.y = previousTilePos.y;
+        board.SetTileType(tile, previousTileType);
+        board.SetTileType(tile2, previousTile2Type);
+        board.RemoveMatches(new Vector2Int(tile.x, tile.y), board.GetTileType(tile));
+        board.RemoveMatches(new Vector2Int(tile2.x, tile2.y), board.GetTileType(tile2));
+
+        isComplete = true;
+        callback();        
+    }
 }
 
 public class Board : MonoBehaviour
@@ -59,7 +81,7 @@ public class Board : MonoBehaviour
 
     public void Init()
     {
-        swapStack = new ChangeStack<SwapInfo>(SwapTiles, SwapResolved);
+        swapStack = new ChangeStack<SwapInfo>(SwapResolved);
 
         tiles = new Tile[height, width];
         currentState = new TileTypes[height, width];
@@ -173,37 +195,9 @@ public class Board : MonoBehaviour
         return foundMatch;
     }*/
 
-    public void SwapTiles(SwapInfo swapperino)
-    {
-        var tile = swapperino.tile;
-        var tile2 = swapperino.tile2;
-        var previousTilePos = new Vector2Int(tile.x, tile.y);
-        var previousTile2Pos = new Vector2Int(tile2.x, tile2.y);
-        var previousTileType = GetTileType(tile);
-        var previousTile2Type = GetTileType(tile2);
-
-        tile.x = previousTile2Pos.x;
-        tile.y = previousTile2Pos.y;
-        tile2.x = previousTilePos.x;
-        tile2.y = previousTilePos.y;
-        SetTileType(tile, previousTileType);
-        SetTileType(tile2, previousTile2Type);
-        FindMatches(new Vector2Int(tile.x, tile.y), GetTileType(tile));
-        FindMatches(new Vector2Int(tile2.x, tile2.y), GetTileType(tile2));
-    }
-    public IEnumerator SwapAnim(SwapInfo swapInfo)
-    {
-        yield return new WaitForSeconds(2.0f);
-        swapInfo.isComplete = true;
-    }
     public void SwapResolved()
     {
-        swapStack.Begin();
-        swapStack.Add(new SwapInfo(this,
-            GetTile(Random.Range(0, width), Random.Range(0, height)), 
-            GetTile(Random.Range(0, width), Random.Range(0, height))
-        ));
-        swapStack.End();
+        // Do after swap stuff
     }
 
     public void FindMatches(Vector2Int origin, TileTypes tileType)
