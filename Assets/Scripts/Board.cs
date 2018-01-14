@@ -21,7 +21,6 @@ public class SwapInfo : ChangeInfo
     public SwapInfo(Board board, Tile tile, Tile tile2)
         :base(board)
     {
-
         this.tile = tile;
         this.tile2 = tile2;
     }
@@ -189,8 +188,8 @@ public class Board : MonoBehaviour
         tile2.y = previousTilePos.y;
         SetTileType(tile, previousTileType);
         SetTileType(tile2, previousTile2Type);
-        RemoveMatches(new Vector2Int(tile.x, tile.y), GetTileType(tile));
-        RemoveMatches(new Vector2Int(tile2.x, tile2.y), GetTileType(tile2));
+        FindMatches(new Vector2Int(tile.x, tile.y), GetTileType(tile));
+        FindMatches(new Vector2Int(tile2.x, tile2.y), GetTileType(tile2));
     }
     public IEnumerator SwapAnim(SwapInfo swapInfo)
     {
@@ -207,7 +206,7 @@ public class Board : MonoBehaviour
         swapStack.End();
     }
 
-    public void RemoveMatches(Vector2Int origin, TileTypes tileType)
+    public void FindMatches(Vector2Int origin, TileTypes tileType)
     {
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
@@ -226,7 +225,7 @@ public class Board : MonoBehaviour
             Debug.Log("Found horizontal match from" + horizontalMatches[0] + " to " + horizontalMatches[horizontalMatches.Count - 1]);
             for (int i = 0; i < horizontalMatches.Count; i++)
             {
-                Destroy(GetTile(horizontalMatches[i].x, horizontalMatches[i].y).gameObject);
+                RemoveTile(horizontalMatches[i].x, horizontalMatches[i].y);
             }
         }
 
@@ -244,9 +243,16 @@ public class Board : MonoBehaviour
             Debug.Log("Found vertical match from" + verticalMatches[0] + " to " + verticalMatches[verticalMatches.Count - 1]);
             for(int i=0;i<verticalMatches.Count;i++)
             {
-                Destroy(GetTile(verticalMatches[i].x, verticalMatches[i].y).gameObject);
+                RemoveTile(verticalMatches[i].x, verticalMatches[i].y);
             }
         }
+    }
 
+    //Handles what happens when you remove a tile
+    public void RemoveTile(int x, int y)
+    {
+        /*var tile = GetTile(x, y);
+        tile.Pop();
+        Destroy(tile.gameObject);*/
     }
 }
