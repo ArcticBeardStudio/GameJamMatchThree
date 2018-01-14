@@ -9,14 +9,16 @@ public class ChangeInfo
 
     public ChangeInfo(Board board)
     {
+        this.board = board;
         isComplete = false;
     }
 
     public void DoChange(System.Action callback)
     {
+        Debug.Assert(board, "Board is null");
         board.StartCoroutine(ChangeRoutine(callback));
     }
-    public IEnumerator ChangeRoutine(System.Action callback)
+    virtual public IEnumerator ChangeRoutine(System.Action callback)
     {
         yield return new WaitForSeconds(2.0f);
         isComplete = true;
