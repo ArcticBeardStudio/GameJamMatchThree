@@ -80,6 +80,23 @@ public class Board : MonoBehaviour
         createStack.End();
     }
 
+    void RefillBoard()
+    {
+        createStack.Begin();
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if(GetTileType(x,y) == TileTypes.None)
+                {
+                    TileTypes tileType = GetRandomTileType();
+                    createStack.Add(new CreateInfo(this, x, y, tileType));
+                }
+            }
+        }
+        createStack.End();
+    }
+
     public Vector3 GetTileLocalPosition(int x, int y)
     {
         return new Vector3(((x + 0.5f) - width * 0.5f) * tileWidth, ((y + 0.5f) - height * 0.5f) * tileHeight);
