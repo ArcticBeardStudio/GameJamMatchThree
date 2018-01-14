@@ -13,40 +13,6 @@ public enum TileTypes
     None
 }
 
-public class SwapInfo : ChangeInfo
-{
-    public Tile tile;
-    public Tile tile2;
-
-    public SwapInfo(Board board, Tile tile, Tile tile2)
-        :base(board)
-    {
-        this.tile = tile;
-        this.tile2 = tile2;
-    }
-
-    override public IEnumerator ChangeRoutine(System.Action callback)
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        var previousTilePos = new Vector2Int(tile.x, tile.y);
-        var previousTile2Pos = new Vector2Int(tile2.x, tile2.y);
-        var previousTileType = board.GetTileType(tile);
-        var previousTile2Type = board.GetTileType(tile2);
-
-        tile.x = previousTile2Pos.x;
-        tile.y = previousTile2Pos.y;
-        tile2.x = previousTilePos.x;
-        tile2.y = previousTilePos.y;
-        board.SetTileType(tile, previousTileType);
-        board.SetTileType(tile2, previousTile2Type);
-        board.FindMatches();
-
-        isComplete = true;
-        callback();        
-    }
-}
-
 public class Board : MonoBehaviour
 {
     public BoardSettings settings;
@@ -57,6 +23,7 @@ public class Board : MonoBehaviour
     Tile[] tilePrefabs { get { return settings.tilePrefabs; } }
 
     public ChangeStack<SwapInfo> swapStack;
+    public ChangeStack<CreateInfo> createStack;
 
     Tile[,] tiles;
     TileTypes[,] currentState;
@@ -80,15 +47,18 @@ public class Board : MonoBehaviour
 
     public void Init()
     {
-        swapStack = new ChangeStack<SwapInfo>(SwapResolved);
-
         tiles = new Tile[height, width];
         currentState = new TileTypes[height, width];
+
+        swapStack = new ChangeStack<SwapInfo>(SwapResolved);
+        createStack = new ChangeStack<CreateInfo>(CreateResolved);
+
         SetupTiles();
     }
 
     void SetupTiles()
     {
+        createStack.Begin();
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -102,9 +72,10 @@ public class Board : MonoBehaviour
                 {
                     tileType = GetRandomTileType();
                 }
-                SetTileType(x, y, tileType);
+                createStack.Add(new CreateInfo(this, x, y, tileType));
             }
         }
+        createStack.End();
     }
 
     public Vector3 GetTileLocalPosition(int x, int y)
@@ -116,10 +87,14 @@ public class Board : MonoBehaviour
     {
         return currentState[y, x];
     }
-
     public TileTypes GetTileType(Tile tile)
     {
-        return currentState[tile.y, tile.x];
+        return GetTileType(tile.x, tile.y);
+    }
+    
+    public TileTypes GetRandomTileType()
+    {
+        return (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
     }
 
     public Tile GetTile(int x, int y)
@@ -127,36 +102,18 @@ public class Board : MonoBehaviour
         return tiles[y, x];
     }
 
-    public TileTypes GetRandomTileType()
-    {
-        return (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
-    }
-
     public void SetTileType(int x, int y, TileTypes tileType)
     {
         currentState[y, x] = tileType;
-        UpdateTile(x, y, tileType);
     }
     public void SetTileType(Tile tile, TileTypes tileType)
     {
         SetTileType(tile.x, tile.y, tileType);
     }
-
-    public void UpdateTile(int x, int y, TileTypes tileType)
+    
+    public void SetTile(int x, int y, Tile tile)
     {
-        if (GetTile(x, y))
-        {
-            //Debug.Log("Deleted: " + GetTileType(x,y).ToString());
-            Destroy(GetTile(x, y).gameObject);
-        }
-        if (tileType != TileTypes.None)
-        {
-            Tile newTile = Instantiate<Tile>(tilePrefabs[(int)tileType], transform);
-            newTile.transform.localPosition = GetTileLocalPosition(x, y);
-            newTile.Init(x, y, this);
-            tiles[y, x] = newTile;
-            //Debug.Log("Created: " + GetTileType(x, y).ToString());
-        }
+        tiles[y, x] = tile;
     }
 
     //Simply checks if two tiles are adjacent
@@ -170,6 +127,12 @@ public class Board : MonoBehaviour
     public void SwapResolved()
     {
         // Do after swap stuff
+        Debug.Log("Swap Done");
+    }
+    public void CreateResolved()
+    {
+        // Do after create stuff
+        Debug.Log("Create Done");
     }
 
     public List<Vector2Int> FindMatches()
