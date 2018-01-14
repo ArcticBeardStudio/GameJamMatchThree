@@ -203,7 +203,7 @@ public class Board : MonoBehaviour
                     horizontalMatches.Clear();
                     if (previousType != TileTypes.None)
                     {
-                        horizontalMatches.Add(new Vector2Int(0, y));
+                        horizontalMatches.Add(new Vector2Int(x, y));
                     }
                 }
             }
@@ -264,7 +264,7 @@ public class Board : MonoBehaviour
                     verticalMatches.Clear();
                     if (previousType != TileTypes.None)
                     {
-                        verticalMatches.Add(new Vector2Int(0, y));
+                        verticalMatches.Add(new Vector2Int(x, y));
                     }
                 }
             }
