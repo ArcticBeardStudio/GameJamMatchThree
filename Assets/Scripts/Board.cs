@@ -272,6 +272,7 @@ public class Board : MonoBehaviour
                 xIndex++;
             }
         }
+        RefillBoard();
     }
 
     public void RefillBoard()
@@ -312,6 +313,31 @@ public class Board : MonoBehaviour
             SetTileType(x, yIndex - 1, tile1);
             yIndex++;
         }
+    }
+
+    public void CheckNewMatch()
+    {
+        TileTypes previousTile = TileTypes.None;
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                var currentType = GetTileType(x, y);
+                if (previousTile != currentType)
+                {
+                    if(CheckMatch(GetTile(x,y), GetTileType(x,y)))
+                    {
+                        return;
+                    }
+                }
+                previousTile = currentType;
+            }
+        }
+    }
+
+    public void CheckPossibleMatches()
+    {
+
     }
 
 }
