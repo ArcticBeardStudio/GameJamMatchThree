@@ -10,13 +10,15 @@ public class ChangeStackTests
     public void BasicUseCase()
     {
         int i = 0;
-        ChangeStack<int> stack = new ChangeStack<int>(x => { 
+        ChangeStack<int> stack = new ChangeStack<int>(x =>
+        {
             Assert.AreEqual(i, x);
             i++;
-            }, () => {
-                Assert.Pass("Resolved");
-            });
-        
+        }, () =>
+        {
+            Assert.Pass("Resolved");
+        });
+
         stack.Begin();
         for (int j = 0; j < 3; j++)
         {
