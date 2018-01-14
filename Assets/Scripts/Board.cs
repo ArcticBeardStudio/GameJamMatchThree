@@ -9,7 +9,8 @@ public enum TileTypes
     Potion,
     Red,
     Green,
-    Blue
+    Blue,
+    None
 }
 
 public class Board : MonoBehaviour
@@ -40,14 +41,14 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                TileTypes tileType = (TileTypes)Random.Range(0,System.Enum.GetNames(typeof(TileTypes)).Length);
+                TileTypes tileType = (TileTypes)Random.Range(0,System.Enum.GetNames(typeof(TileTypes)).Length-1);
 
                 int tileLeft = x > 0 ? (int)GetTileType(x - 1, y) : -1;
                 int tileDown = y > 0 ? (int)GetTileType(x, y - 1) : -1;
 
                 while ((int)tileType == tileLeft || (int)tileType == tileDown)
                 {
-                    tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length);
+                    tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length-1);
                 }
                 SetTileType(x, y, tileType);
             }
@@ -177,12 +178,6 @@ public class Board : MonoBehaviour
             }
         }
 
-        if(horizontalMatches >= 2)
-        {
-            Debug.Log("FOUND HORIZONTAL MATCH BETWEEN: " + horizontalLeftX + "," + tile.y + "and " + horizontalRightX + "," + tile.y);
-            foundMatch = true;
-        }
-
         xIndex = tile.x;
         yIndex = tile.y;
 
@@ -217,13 +212,87 @@ public class Board : MonoBehaviour
             }
         }
 
+        if (horizontalMatches >= 2)
+        {
+            Debug.Log("FOUND HORIZONTAL MATCH BETWEEN: " + horizontalLeftX + "," + tile.y + "and " + horizontalRightX + "," + tile.y);
+            RemoveFromIndexTo(horizontalLeftX, tile.y, horizontalRightX, tile.y);
+            foundMatch = true;
+        }
+
         if (verticalMatches >= 2)
         {
             Debug.Log("FOUND VERTICAL MATCH BETWEEN: " + tile.x + "," + verticalBotY + "and " + tile.x + "," + verticalTopY);
+            RemoveFromIndexTo(tile.x, verticalBotY, tile.x, verticalTopY);
             foundMatch = true;
         }
 
         return foundMatch;
     }
     
+    public void RemoveFromIndexTo(int x1, int y1, int x2, int y2)
+    {
+        //Remove vertical
+        if(x1 == x2)
+        {
+            var yIndex = y1;
+            while (yIndex <= y2)
+            {
+                GetTile(x1, yIndex).Pop();
+                SetTileType(x1, yIndex, TileTypes.None);
+                yIndex++;
+            }
+        }
+        //Remove horizontal
+        else
+        {
+            var xIndex = x1;
+            while (xIndex <= x2)
+            {
+                GetTile(xIndex, y1).Pop();
+                SetTileType(xIndex, y1, TileTypes.None);
+                xIndex++;
+            }
+        }
+    }
+
+    public void RefillBoard()
+    {
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if(!GetTile(x, y-1))
+                {
+                    MoveDownRow(x, y);
+                }
+            }
+        }
+
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (GetTileType(x, y) == TileTypes.None)
+                {
+                    TileTypes tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length-1);
+                    SetTileType(x, y, tileType);
+                }
+            }
+        }
+    }
+
+    void MoveDownRow(int x, int y)
+    {
+        var yIndex = y;
+        while(yIndex < height)
+        {
+            GetTile(x, yIndex).y--;
+            TileTypes tile1 = GetTileType(x, yIndex);
+            TileTypes tile2 = GetTileType(x, yIndex-1);
+            SetTileType(x, yIndex, tile2);
+            SetTileType(x, yIndex - 1, tile1);
+            yIndex++;
+        }
+    }
+
 }
