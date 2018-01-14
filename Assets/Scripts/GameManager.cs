@@ -58,8 +58,6 @@ public class GameManager : MonoBehaviour
         Board board = go.AddComponent<Board>();
         Player player = instance.players[playerIndex];
 
-        board.width = 10;
-        board.height = 5;
         board.Init();
         player.board = board;
 

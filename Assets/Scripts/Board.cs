@@ -15,17 +15,31 @@ public enum TileTypes
 
 public class Board : MonoBehaviour
 {
-    public int height;
-    public int width;
+    public BoardSettings settings;
+    int width { get { return settings.width; } }
+    int height { get { return settings.height; } }
+    float tileWidth { get { return settings.tileWidth; } }
+    float tileHeight { get { return settings.tileHeight; } }
+    Tile[] tilePrefabs { get { return settings.tilePrefabs; } }
 
     Tile[,] tiles;
     TileTypes[,] tileTypes;
 
-    public Tile[] tilePrefabs;
-
     void Start()
     {
         Init();
+    }
+
+    void OnDrawGizmos()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                Vector3 tilePos = GetTileLocalPosition(x, y) + transform.position;
+                Gizmos.DrawWireCube(tilePos, new Vector3(tileWidth, tileHeight));
+            }
+        }
     }
 
     public void Init()
@@ -41,18 +55,23 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                TileTypes tileType = (TileTypes)Random.Range(0,System.Enum.GetNames(typeof(TileTypes)).Length-1);
+                TileTypes tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
 
                 int tileLeft = x > 0 ? (int)GetTileType(x - 1, y) : -1;
                 int tileDown = y > 0 ? (int)GetTileType(x, y - 1) : -1;
 
                 while ((int)tileType == tileLeft || (int)tileType == tileDown)
                 {
-                    tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length-1);
+                    tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
                 }
                 SetTileType(x, y, tileType);
             }
         }
+    }
+
+    public Vector3 GetTileLocalPosition(int x, int y)
+    {
+        return new Vector3(((x + 0.5f) - width * 0.5f) * tileWidth, ((y + 0.5f) - height * 0.5f) * tileHeight);
     }
 
     public TileTypes GetTileType(int x, int y)
@@ -88,7 +107,7 @@ public class Board : MonoBehaviour
         {
             Destroy(tiles[y, x].gameObject);
         }
-        if((int)tileType <= tilePrefabs.Length || tilePrefabs.Length != 0)
+        if ((int)tileType <= tilePrefabs.Length || tilePrefabs.Length != 0)
         {
             Tile newTile = Instantiate<Tile>(tilePrefabs[(int)tileType], transform);
             newTile.Init(x, y, this);
@@ -121,7 +140,7 @@ public class Board : MonoBehaviour
                 foundMatch = true;
             }
 
-            if(foundMatch)
+            if (foundMatch)
             {
                 TileTypes tile1 = GetTileType(t1);
                 TileTypes tile2 = GetTileType(t2);
@@ -148,10 +167,10 @@ public class Board : MonoBehaviour
         int yIndex = tile.y;
 
         //Check matches to the right
-        while (xIndex+1 < width)
+        while (xIndex + 1 < width)
         {
             xIndex += 1;
-            if(GetTileType(xIndex,yIndex) == tileType)
+            if (GetTileType(xIndex, yIndex) == tileType)
             {
                 horizontalMatches++;
             }
@@ -164,7 +183,7 @@ public class Board : MonoBehaviour
         xIndex = tile.x;
 
         //Check matches to the left
-        while (xIndex-1 >= 0)
+        while (xIndex - 1 >= 0)
         {
             xIndex -= 1;
             if (GetTileType(xIndex, yIndex) == tileType)
@@ -228,11 +247,11 @@ public class Board : MonoBehaviour
 
         return foundMatch;
     }
-    
+
     public void RemoveFromIndexTo(int x1, int y1, int x2, int y2)
     {
         //Remove vertical
-        if(x1 == x2)
+        if (x1 == x2)
         {
             var yIndex = y1;
             while (yIndex <= y2)
@@ -261,7 +280,7 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if(!GetTile(x, y-1))
+                if (!GetTile(x, y - 1))
                 {
                     MoveDownRow(x, y);
                 }
@@ -274,7 +293,7 @@ public class Board : MonoBehaviour
             {
                 if (GetTileType(x, y) == TileTypes.None)
                 {
-                    TileTypes tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length-1);
+                    TileTypes tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
                     SetTileType(x, y, tileType);
                 }
             }
@@ -284,11 +303,11 @@ public class Board : MonoBehaviour
     void MoveDownRow(int x, int y)
     {
         var yIndex = y;
-        while(yIndex < height)
+        while (yIndex < height)
         {
             GetTile(x, yIndex).y--;
             TileTypes tile1 = GetTileType(x, yIndex);
-            TileTypes tile2 = GetTileType(x, yIndex-1);
+            TileTypes tile2 = GetTileType(x, yIndex - 1);
             SetTileType(x, yIndex, tile2);
             SetTileType(x, yIndex - 1, tile1);
             yIndex++;

@@ -20,8 +20,9 @@ public class Tile : MonoBehaviour
         this.y = y;
         this.board = board;
 
-        transform.localPosition = new Vector3(x, y);
+        transform.localPosition = board.GetTileLocalPosition(x, y);
     }
+    
     public override string ToString()
     {
         return string.Format("({0}, {1})", x, y);
