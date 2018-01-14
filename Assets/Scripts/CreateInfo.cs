@@ -14,6 +14,8 @@ public class CreateInfo : ChangeInfo
         this.x = x;
         this.y = y;
         this.tileType = tileType;
+        
+        board.SetTileType(x, y, tileType);
     }
 
     override public IEnumerator ChangeRoutine(System.Action callback)
@@ -24,7 +26,6 @@ public class CreateInfo : ChangeInfo
 
         if (tileType != TileTypes.None)
         {
-            board.SetTileType(x, y, tileType);
             Tile newTile = GameObject.Instantiate<Tile>(board.settings.tilePrefabs[(int)tileType], board.transform);
             newTile.transform.localPosition = board.GetTileLocalPosition(x, y);
             newTile.Init(x, y, board);

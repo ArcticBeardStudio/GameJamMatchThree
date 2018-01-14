@@ -36,14 +36,13 @@ public class Player : MonoBehaviour
                 else
                 {
                     var bajs = new SwapInfo(board, selected, tile);
-                    // board.SwapTiles(bajs);
+
                     board.swapStack.Begin();
                     board.swapStack.Add(bajs);
                     board.swapStack.End();
 
                     selected = null;
                 }
-                //tile.Pop();
             }
         }
     }

@@ -11,11 +11,6 @@ public class Tile : MonoBehaviour
 
     new public BoxCollider collider { get; protected set; }
 
-    public void Pop()
-    {
-        board.SetTileType(x, y, TileTypes.None);
-    }
-
     public void Init(int x, int y, Board board)
     {
         this.x = x;

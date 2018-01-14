@@ -16,7 +16,7 @@ public class SwapInfo : ChangeInfo
 
     override public IEnumerator ChangeRoutine(System.Action callback)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
 
         var previousTilePos = new Vector2Int(tile.x, tile.y);
         var previousTile2Pos = new Vector2Int(tile2.x, tile2.y);

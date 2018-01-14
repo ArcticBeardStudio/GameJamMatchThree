@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
 
     public ChangeStack<SwapInfo> swapStack;
     public ChangeStack<CreateInfo> createStack;
+    public ChangeStack<RemoveInfo> removeStack;
 
     Tile[,] tiles;
     TileTypes[,] currentState;
@@ -52,6 +53,7 @@ public class Board : MonoBehaviour
 
         swapStack = new ChangeStack<SwapInfo>(SwapResolved);
         createStack = new ChangeStack<CreateInfo>(CreateResolved);
+        removeStack = new ChangeStack<RemoveInfo>(RemoveResolved);
 
         SetupTiles();
     }
@@ -134,6 +136,11 @@ public class Board : MonoBehaviour
         // Do after create stuff
         Debug.Log("Create Done");
     }
+    public void RemoveResolved()
+    {
+        // Do after remove stuff
+        Debug.Log("Remove Done");
+    }
 
     public void FindMatches(Vector2Int origin, TileTypes tileType)
     {
@@ -175,13 +182,5 @@ public class Board : MonoBehaviour
             {
             }
         }
-    }
-
-    //Handles what happens when you remove a tile
-    public void RemoveTile(int x, int y)
-    {
-        var tile = GetTile(x, y);
-        tile.Pop();
-        Destroy(tile.gameObject);
     }
 }
