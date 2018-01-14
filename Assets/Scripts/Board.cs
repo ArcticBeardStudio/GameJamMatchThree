@@ -168,33 +168,6 @@ public class Board : MonoBehaviour
         return dx * dx + dy * dy == 1;
     }
 
-    /*
-    //Call when trying to make a move with two tiles, returns true if a match is found and swaps the tiles
-    public bool TryMakeMove(Tile t1, Tile t2)
-    {
-        var foundMatch = false;
-        if (Adjacent(t1, t2))
-        {
-            //Tries to swap and waits 0.5f seconds before checking if it's a match
-            
-            if (CheckMatch(t2, GetTileType(t1)))
-            {
-                foundMatch = true;
-            }
-            if (CheckMatch(t1, GetTileType(t2)))
-            {
-                foundMatch = true;
-            }
-
-            //If no match is found, swap back to previous
-            if (!foundMatch)
-            {
-                Debug.Log("No match m8");
-            }
-        }
-        return foundMatch;
-    }*/
-
     public void SwapResolved()
     {
         // Do after swap stuff
