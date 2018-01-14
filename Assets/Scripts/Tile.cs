@@ -9,6 +9,8 @@ public class Tile : MonoBehaviour
 
     public Board board { get; protected set; }
 
+    new public BoxCollider collider { get; protected set; }
+
     public void Pop()
     {
         Destroy(gameObject);
@@ -21,8 +23,11 @@ public class Tile : MonoBehaviour
         this.board = board;
 
         transform.localPosition = board.GetTileLocalPosition(x, y);
+
+        collider = gameObject.AddComponent<BoxCollider>();
+        collider.size = Vector3.one;
     }
-    
+
     public override string ToString()
     {
         return string.Format("({0}, {1})", x, y);
