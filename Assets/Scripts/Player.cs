@@ -15,7 +15,9 @@ public class Player : MonoBehaviour
     {
         health -= amount;
     }
-    
+
+    public Tile selected = null;
+
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -25,7 +27,18 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Tile tile = hit.collider.GetComponent<Tile>();
-                tile.Pop();
+                if (!selected)
+                {
+                    selected = tile;
+                }
+                else
+                {
+                    var bajs = new SwapInfo(selected, tile);
+                    board.SwapTiles(bajs);
+                    
+                    selected = null;
+                }
+                //tile.Pop();
             }
         }
     }

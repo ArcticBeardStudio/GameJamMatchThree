@@ -356,6 +356,10 @@ Prefab:
       propertyPath: board
       value: 
       objectReference: {fileID: 1283861670}
+    - target: {fileID: 1464583392817102, guid: 6791b13d69f0aaf498475aa626280746, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6791b13d69f0aaf498475aa626280746, type: 2}
   m_IsPrefabParent: 0
@@ -407,6 +411,10 @@ Prefab:
     - target: {fileID: 1962589637972328, guid: e72b1464ce6f78e4e9af701eb1c3cbfd, type: 2}
       propertyPath: m_Name
       value: Board1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1962589637972328, guid: e72b1464ce6f78e4e9af701eb1c3cbfd, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e72b1464ce6f78e4e9af701eb1c3cbfd, type: 2}
