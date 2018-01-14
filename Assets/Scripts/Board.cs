@@ -189,6 +189,8 @@ public class Board : MonoBehaviour
         tile2.y = previousTilePos.y;
         SetTileType(tile, previousTileType);
         SetTileType(tile2, previousTile2Type);
+        RemoveMatches(new Vector2Int(tile.x, tile.y), GetTileType(tile));
+        RemoveMatches(new Vector2Int(tile2.x, tile2.y), GetTileType(tile2));
     }
     public IEnumerator SwapAnim(SwapInfo swapInfo)
     {
@@ -205,8 +207,46 @@ public class Board : MonoBehaviour
         swapStack.End();
     }
 
-    public void RemoveMatches()
+    public void RemoveMatches(Vector2Int origin, TileTypes tileType)
     {
+        var horizontalMatches = new List<Vector2Int>();
+        var verticalMatches = new List<Vector2Int>();
+        
+        //Check horizontal matches
+        for (int i=0;i<width;i++)
+        {
+            if(GetTileType(i,origin.y) == tileType)
+            {
+                horizontalMatches.Add(new Vector2Int(i,origin.y));
+            }
+        }
+
+        if(horizontalMatches.Count >= 3)
+        {
+            Debug.Log("Found horizontal match from" + horizontalMatches[0] + " to " + horizontalMatches[horizontalMatches.Count - 1]);
+            for (int i = 0; i < horizontalMatches.Count; i++)
+            {
+                Destroy(GetTile(horizontalMatches[i].x, horizontalMatches[i].y).gameObject);
+            }
+        }
+
+        //Check vertical matches
+        for (int i = 0; i < height; i++)
+        {
+            if (GetTileType(origin.x,i) == tileType)
+            {
+                verticalMatches.Add(new Vector2Int(origin.x, i));
+            }
+        }
+
+        if (verticalMatches.Count >= 3)
+        {
+            Debug.Log("Found vertical match from" + verticalMatches[0] + " to " + verticalMatches[verticalMatches.Count - 1]);
+            for(int i=0;i<verticalMatches.Count;i++)
+            {
+                Destroy(GetTile(verticalMatches[i].x, verticalMatches[i].y).gameObject);
+            }
+        }
 
     }
 }
