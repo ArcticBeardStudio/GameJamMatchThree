@@ -119,6 +119,7 @@ public class Board : MonoBehaviour
         }
     }
 
+    //Simply checks if two tiles are adjacent
     public bool Adjacent(Tile t1, Tile t2)
     {
         int dx = System.Math.Abs(t2.x - t1.x);
@@ -126,11 +127,20 @@ public class Board : MonoBehaviour
         return dx * dx + dy * dy == 1;
     }
 
+    //Call when trying to make a move with two tiles, returns true if a match is found and swaps the tiles
     public bool TryMakeMove(Tile t1, Tile t2)
     {
         var foundMatch = false;
         if (Adjacent(t1, t2))
         {
+            //Tries to swap and waits 0.5f seconds before checking if it's a match
+            TileTypes tile1 = GetTileType(t1);
+            TileTypes tile2 = GetTileType(t2);
+            SetTileType(t1, tile2);
+            SetTileType(t2, tile1);
+
+            StartCoroutine(pause());
+
             if (CheckMatch(t2, GetTileType(t1)))
             {
                 foundMatch = true;
@@ -140,17 +150,17 @@ public class Board : MonoBehaviour
                 foundMatch = true;
             }
 
-            if (foundMatch)
+            //If no match is found, swap back to previous
+            if (!foundMatch)
             {
-                TileTypes tile1 = GetTileType(t1);
-                TileTypes tile2 = GetTileType(t2);
-                SetTileType(t1, tile2);
-                SetTileType(t2, tile1);
+                SetTileType(t1, tile1);
+                SetTileType(t2, tile2);
             }
         }
         return foundMatch;
     }
 
+    //Called when trying to make a move with two adjacent tiles
     public bool CheckMatch(Tile tile, TileTypes tileType)
     {
         var foundMatch = false;
@@ -248,6 +258,7 @@ public class Board : MonoBehaviour
         return foundMatch;
     }
 
+    //When a match is found, remove each tiles from x1:y1 to x2:y2
     public void RemoveFromIndexTo(int x1, int y1, int x2, int y2)
     {
         //Remove vertical
@@ -275,6 +286,7 @@ public class Board : MonoBehaviour
         RefillBoard();
     }
 
+    //Refills all the empty tiles with random tiles
     public void RefillBoard()
     {
         for (int y = 1; y < height; y++)
@@ -299,8 +311,10 @@ public class Board : MonoBehaviour
                 }
             }
         }
+        CheckNewMatch();
     }
 
+    //Moves down an entire row when a match is found
     void MoveDownRow(int x, int y)
     {
         var yIndex = y;
@@ -315,6 +329,7 @@ public class Board : MonoBehaviour
         }
     }
 
+    //After the board is refilled, CheckNewMatch is called.
     public void CheckNewMatch()
     {
         TileTypes previousTile = TileTypes.None;
@@ -338,6 +353,11 @@ public class Board : MonoBehaviour
     public void CheckPossibleMatches()
     {
 
+    }
+
+    IEnumerator pause()
+    {
+        yield return new WaitForSeconds(0.5f);
     }
 
 }
