@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
 
     public void Pop()
     {
-        Destroy(gameObject);
+        board.SetTileType(x, y, TileTypes.None);
     }
 
     public void Init(int x, int y, Board board)

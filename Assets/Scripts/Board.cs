@@ -23,13 +23,13 @@ public class Board : MonoBehaviour
     Tile[] tilePrefabs { get { return settings.tilePrefabs; } }
 
     Tile[,] tiles;
-    TileTypes[,] tileTypes;
+    TileTypes[,] currentState;
 
     void Start()
     {
         Init();
     }
-
+    
     void OnDrawGizmos()
     {
         for (int y = 0; y < height; y++)
@@ -45,7 +45,7 @@ public class Board : MonoBehaviour
     public void Init()
     {
         tiles = new Tile[height, width];
-        tileTypes = new TileTypes[height, width];
+        currentState = new TileTypes[height, width];
         SetupTiles();
     }
 
@@ -55,14 +55,14 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                TileTypes tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
+                TileTypes tileType = GetRandomTileType();
 
                 int tileLeft = x > 0 ? (int)GetTileType(x - 1, y) : -1;
                 int tileDown = y > 0 ? (int)GetTileType(x, y - 1) : -1;
 
                 while ((int)tileType == tileLeft || (int)tileType == tileDown)
                 {
-                    tileType = (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
+                    tileType = GetRandomTileType();
                 }
                 SetTileType(x, y, tileType);
             }
@@ -76,12 +76,12 @@ public class Board : MonoBehaviour
 
     public TileTypes GetTileType(int x, int y)
     {
-        return tileTypes[y, x];
+        return currentState[y, x];
     }
 
     public TileTypes GetTileType(Tile tile)
     {
-        return tileTypes[tile.y, tile.x];
+        return currentState[tile.y, tile.x];
     }
 
     public Tile GetTile(int x, int y)
@@ -89,33 +89,34 @@ public class Board : MonoBehaviour
         return tiles[y, x];
     }
 
+    public TileTypes GetRandomTileType()
+    {
+        return (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
+    }
+
     public void SetTileType(int x, int y, TileTypes tileType)
     {
-        tileTypes[y, x] = tileType;
-        TileUpdated(x, y, tileTypes[y, x]);
+        currentState[y, x] = tileType;
+        UpdateTile(x, y, tileType);
     }
-
     public void SetTileType(Tile tile, TileTypes tileType)
     {
-        tileTypes[tile.y, tile.x] = tileType;
-        TileUpdated(tile.x, tile.y, tileType);
+        SetTileType(tile.x, tile.y, tileType);
     }
 
-    void TileUpdated(int x, int y, TileTypes tileType)
+    void UpdateTile(int x, int y, TileTypes tileType)
     {
-        if (tiles[y, x] != null)
+        if (GetTile(x, y))
         {
-            Destroy(tiles[y, x].gameObject);
+            Destroy(GetTile(x, y).gameObject);
+            RefillBoard();
         }
-        if ((int)tileType <= tilePrefabs.Length || tilePrefabs.Length != 0)
+        if (tileType != TileTypes.None)
         {
             Tile newTile = Instantiate<Tile>(tilePrefabs[(int)tileType], transform);
+            newTile.transform.localPosition = GetTileLocalPosition(x, y);
             newTile.Init(x, y, this);
             tiles[y, x] = newTile;
-        }
-        else
-        {
-            Debug.LogWarning("TileUpdated error: tilePrefabs length 0 or tileType > tilePrefabs");
         }
     }
 
@@ -268,7 +269,6 @@ public class Board : MonoBehaviour
             while (yIndex <= y2)
             {
                 GetTile(x1, yIndex).Pop();
-                SetTileType(x1, yIndex, TileTypes.None);
                 yIndex++;
             }
         }
@@ -279,7 +279,6 @@ public class Board : MonoBehaviour
             while (xIndex <= x2)
             {
                 GetTile(xIndex, y1).Pop();
-                SetTileType(xIndex, y1, TileTypes.None);
                 xIndex++;
             }
         }
@@ -340,7 +339,7 @@ public class Board : MonoBehaviour
                 var currentType = GetTileType(x, y);
                 if (previousTile != currentType)
                 {
-                    if(CheckMatch(GetTile(x,y), GetTileType(x,y)))
+                    if (CheckMatch(GetTile(x, y), GetTileType(x, y)))
                     {
                         return;
                     }
