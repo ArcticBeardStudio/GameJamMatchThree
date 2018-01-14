@@ -69,12 +69,6 @@ public class GameManager : MonoBehaviour
     void Init()
     {
         currentGameState = GameStates.PrePlay;
-
-        for (int i = 0; i < 2; i++)
-        {
-            Player player = CreatePlayer();
-            Board board = CreateBoard(player.index);
-        }
     }
 
     void Awake()
