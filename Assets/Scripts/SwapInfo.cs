@@ -29,8 +29,9 @@ public class SwapInfo : ChangeInfo
         tile2.y = previousTilePos.y;
         board.SetTileType(tile, previousTileType);
         board.SetTileType(tile2, previousTile2Type);
-        var MatchesFound = board.FindMatches();
 
+        board.SetTile(tile.x, tile.y, tile);
+        board.SetTile(tile2.x, tile2.y, tile2);
         tile.transform.localPosition = board.GetTileLocalPosition(tile.x, tile.y);
         tile2.transform.localPosition = board.GetTileLocalPosition(tile2.x, tile2.y);
 

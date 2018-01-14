@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
                 if (!selected)
                 {
                     selected = tile;
+                    Debug.LogFormat("Clicked {0} of {1}", tile, board.GetTileType(tile));
                 }
                 else
                 {

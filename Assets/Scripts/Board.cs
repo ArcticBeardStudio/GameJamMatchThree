@@ -129,7 +129,13 @@ public class Board : MonoBehaviour
     public void SwapResolved()
     {
         // Do after swap stuff
-        Debug.Log("Swap Done");
+        Vector2Int[] matches = FindMatches();
+        removeStack.Begin();
+        foreach (Vector2Int pos in matches)
+        {
+            removeStack.Add(new RemoveInfo(this, pos.x, pos.y));
+        }
+        removeStack.End();
     }
     public void CreateResolved()
     {
@@ -142,7 +148,7 @@ public class Board : MonoBehaviour
         Debug.Log("Remove Done");
     }
 
-    public List<Vector2Int> FindMatches()
+    public Vector2Int[] FindMatches()
     {
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
@@ -297,6 +303,6 @@ public class Board : MonoBehaviour
         }
 
         Debug.Log("Found matches is: " + allFoundMatches.Count);
-        return allFoundMatches;
+        return allFoundMatches.ToArray();
     }
 }
