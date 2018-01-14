@@ -19,6 +19,7 @@ public class ChangeInfo
     public IEnumerator ChangeRoutine(System.Action callback)
     {
         yield return new WaitForSeconds(2.0f);
+        isComplete = true;
         callback();
     }
 }
