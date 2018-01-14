@@ -27,20 +27,17 @@ public class GameManager : MonoBehaviour
 
     public static GameManager CreateGameManager()
     {
+        if (instance) return instance;
+
         GameObject go = new GameObject("GameManager");
         GameManager gameManager = go.AddComponent<GameManager>();
-
-        gameManager.Init();
-
-        Debug.Assert(instance == null, "There can only be one GameManager (to rule them all)");
-        instance = gameManager;
 
         return gameManager;
     }
 
     public static Player CreatePlayer()
     {
-        Debug.Assert(instance != null, "GameManager must be created before a Player can be created");
+        Debug.Assert(instance, "GameManager must be created before a Player can be created");
 
         GameObject go = new GameObject("Player" + instance.players.Count);
         Player player = go.AddComponent<Player>();
@@ -51,13 +48,41 @@ public class GameManager : MonoBehaviour
         return player;
     }
 
+    public static Board CreateBoard(int playerIndex)
+    {
+        Debug.Assert(instance, "GameManager must be created before a Board can be created");
+        Debug.AssertFormat(playerIndex < instance.players.Count, "Player index {0} exceeds player count", playerIndex);
+        Debug.AssertFormat(instance.players[playerIndex], "Player at index {0} not valid", playerIndex);
+
+        GameObject go = new GameObject("Board" + playerIndex);
+        Board board = go.AddComponent<Board>();
+        Player player = instance.players[playerIndex];
+
+        board.width = 10;
+        board.height = 5;
+        board.Init();
+        player.board = board;
+
+        return board;
+    }
+
     void Init()
     {
         currentGameState = GameStates.PrePlay;
+
+        for (int i = 0; i < 2; i++)
+        {
+            Player player = CreatePlayer();
+            Board board = CreateBoard(player.index);
+        }
     }
 
-    void Awake() 
+    void Awake()
     {
-        CreateGameManager();
+        if (!instance)
+        {
+            instance = this;
+            Init();
+        }
     }
 }

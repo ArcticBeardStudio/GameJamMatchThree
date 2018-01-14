@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
 {
     public int index;
     public int health;
-
-    public Board GetBoard() { return null; }
+    
+    public Board board;
 
     public bool CanMove() { return false; }
 
@@ -16,13 +16,14 @@ public class Player : MonoBehaviour
         health -= amount;
     }
 
-    public void Init(int index) {
+    public void Init(int index)
+    {
         this.index = index;
         health = 100;
     }
 
     void Start()
     {
-        
+
     }
 }
