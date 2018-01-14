@@ -163,6 +163,7 @@ public class Board : MonoBehaviour
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
+        RefillBoard();
     }
 
     public Vector2Int[] FindMatches()
