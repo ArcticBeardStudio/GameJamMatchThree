@@ -40,8 +40,8 @@ public class SwapInfo : ChangeInfo
         tile2.y = previousTilePos.y;
         board.SetTileType(tile, previousTileType);
         board.SetTileType(tile2, previousTile2Type);
-        board.RemoveMatches(new Vector2Int(tile.x, tile.y), board.GetTileType(tile));
-        board.RemoveMatches(new Vector2Int(tile2.x, tile2.y), board.GetTileType(tile2));
+        board.FindMatches(new Vector2Int(tile.x, tile.y), board.GetTileType(tile));
+        board.FindMatches(new Vector2Int(tile2.x, tile2.y), board.GetTileType(tile2));
 
         isComplete = true;
         callback();        
@@ -173,11 +173,13 @@ public class Board : MonoBehaviour
         // Do after swap stuff
     }
 
-    public void RemoveMatches(Vector2Int origin, TileTypes tileType)
+    public void FindMatches(Vector2Int origin, TileTypes tileType)
     {
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
-        
+
+        var allFoundMatches = new List<Vector2Int>();
+
         //Check horizontal matches
         for (int i=0;i<width;i++)
         {
@@ -192,7 +194,6 @@ public class Board : MonoBehaviour
             Debug.Log("Found horizontal match from" + horizontalMatches[0] + " to " + horizontalMatches[horizontalMatches.Count - 1]);
             for (int i = 0; i < horizontalMatches.Count; i++)
             {
-                Destroy(GetTile(horizontalMatches[i].x, horizontalMatches[i].y).gameObject);
             }
         }
 
@@ -210,9 +211,15 @@ public class Board : MonoBehaviour
             Debug.Log("Found vertical match from" + verticalMatches[0] + " to " + verticalMatches[verticalMatches.Count - 1]);
             for(int i=0;i<verticalMatches.Count;i++)
             {
-                Destroy(GetTile(verticalMatches[i].x, verticalMatches[i].y).gameObject);
             }
         }
+    }
 
+    //Handles what happens when you remove a tile
+    public void RemoveTile(int x, int y)
+    {
+        var tile = GetTile(x, y);
+        tile.Pop();
+        Destroy(tile.gameObject);
     }
 }
