@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum TileTypes
@@ -154,7 +155,9 @@ public class Board : MonoBehaviour
         // If not filled
         // Refill
         // Else \/
-        Vector2Int[] matches = FindMatches();
+        //Vector2Int[] matches = FindMatches();
+
+
         removeStack.Begin();
         foreach (Vector2Int pos in matches)
         {
@@ -355,5 +358,92 @@ public class Board : MonoBehaviour
 
         Debug.Log("Found matches is: " + allFoundMatches.Count);
         return allFoundMatches.ToArray();
+    }
+
+    private List<Tile> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
+    {
+        List<Tile> matches = new List<Tile>();
+        Tile startTile = null;
+
+        if (IsWithinBounds(startX, startY))
+        {
+            startTile = tiles[startX, startY];
+        }
+
+        if(startTile != null)
+        {
+            matches.Add(startTile);
+        }
+        else
+        {
+            return null;
+        }
+
+        int nextX;
+        int nextY;
+
+        int maxValue = (width>height) ? width: height;
+
+        for (int i=1; i<maxValue-1;i++)
+        {
+            nextX = startX + (int)Mathf.Clamp(searchDirection.x, -1, 1) * i;
+            nextY = startY + (int)Mathf.Clamp(searchDirection.y, -1, 1) * i;
+
+            //Check if we're outside of the bounds
+            if(!IsWithinBounds(nextX,nextY))
+            {
+                break;
+            }
+            Tile nextTile = tiles[nextX, nextY];
+            if (nextTile == null)
+            {
+                break;
+            }
+            else
+            {
+                var startType = GetTileType(startX, startY);
+                var nextType = GetTileType(nextX, nextY);
+                if (startType == nextType)
+                {
+                    matches.Add(nextTile);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        if(matches.Count >= minLength)
+        {
+            return matches;
+        }
+
+        return new List<Tile>();
+    }
+
+    private List<Tile> FindHorizontalMatches(int startX, int startY, int minLength = 3)
+    {
+        List<Tile> rightMatches = FindMatches(startX, startY, new Vector2(1, 0), 2);
+        List<Tile> leftMatches = FindMatches(startX, startY, new Vector2(-1, 0), 2);
+
+        var combinedMatches = rightMatches.Union(leftMatches).ToList();
+
+        return (combinedMatches.Count >= minLength) ? combinedMatches : null;
+    }
+
+    private List<Tile> FindVerticalMatches(int startX, int startY, int minLength = 3)
+    {
+        List<Tile> upwardMatches = FindMatches(startX, startY, new Vector2(0, 1), 2);
+        List<Tile> downwardMatches = FindMatches(startX, startY, new Vector2(0, -1), 2);
+
+        var combinedMatches = upwardMatches.Union(downwardMatches).ToList();
+
+        return (combinedMatches.Count >= minLength) ? combinedMatches : null;
+    }
+
+    private bool IsWithinBounds(int x, int y)
+    {
+        return (x >= 0 && x < width && y >= 0 && y < height);
     }
 }
