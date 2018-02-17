@@ -140,6 +140,11 @@ public class Board : MonoBehaviour
         return GetTileType(x, y) == TileTypes.None;
     }
 
+    public bool IsNull(int x, int y)
+    {
+        return GetTile(x, y) == null ? true : false;
+    }
+
     public void SetTileType(int x, int y, TileTypes tileType)
     {
         currentState[y, x] = tileType;
@@ -171,11 +176,12 @@ public class Board : MonoBehaviour
         {
             matches = matches.Union(GetAllMatches(swapInfo)).ToList();
         }
+        Debug.Log("Matches found: " + matches.Count);
         //Enter here if the player made the swap and there's no match, swap back the tiles
         if(history.Count == 1 && history[0].swapReason == SwapReason.PlayerInput && matches.Count < 3)
         {
             swapStack.Begin();
-            Debug.Log("Didnt find a match");
+            Debug.Log("Didnt find a match, swap back");
             swapStack.Add(new SwapAction(this,
                                     history[0].p1,
                                     history[0].p2));
@@ -185,12 +191,15 @@ public class Board : MonoBehaviour
         if(matches.Count >= 3)
         {
             removeStack.Begin();
-            Debug.Log("Found a match");
             foreach (Tile tile in matches)
             {
                 removeStack.Add(new RemoveAction(this, tile.x, tile.y));
             }
             removeStack.End();
+        }
+        if(matches.Count < 3 && NeedsToRefill())
+        {
+            RefillBoard();
         }
     }
 
@@ -218,7 +227,6 @@ public class Board : MonoBehaviour
     private void CollapseColumns(List<int> columns, float collapseTime = 0.1f)
     {
         swapStack.Begin();
-        Debug.Log("Collumn list length: " + columns.Count);
         foreach (int column in columns)
         {
             for (int i = 0; i < height - 1; i++)
@@ -246,8 +254,7 @@ public class Board : MonoBehaviour
         }
         else
         {
-            Debug.Log("Collapse columns, length of swapStack is: " + swapStack.length);
-            Debug.Log("Check if resolved: " + swapStack.isResolved);
+            Debug.Log("Collapse columns");
         }
         swapStack.End();
     }
@@ -375,6 +382,17 @@ public class Board : MonoBehaviour
 
     private bool NeedsToRefill()
     {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if(IsEmpty(x,y))
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
+
 }

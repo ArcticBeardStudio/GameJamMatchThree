@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -28,5 +29,18 @@ public class Tile : MonoBehaviour
     public override string ToString()
     {
         return string.Format("({0}, {1})", x, y);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.black;
+
+        Handles.BeginGUI();
+        Vector3 pos = transform.position;
+        Vector2 pos2D = HandleUtility.WorldToGUIPoint(pos);
+        //GUI.Label(new Rect(pos2D.x, pos2D.y, 100, 100), x + "," + y + board.GetTile(x, y).name + "/" + board.GetTileType(x, y), style);
+        GUI.Label(new Rect(pos2D.x, pos2D.y, 100, 100), board.IsEmpty(x,y).ToString() + " " + board.IsNull(x,y).ToString(), style);
+        Handles.EndGUI();
     }
 }

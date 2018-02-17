@@ -85,6 +85,11 @@ public class SwapAction : ChangeAction
                 CheckComplete();
             });
         }
+        else
+        {
+            isComplete1 = true;
+            CheckComplete();
+        }
         if (tile2)
         {
             TweenFactory.Tween(null, startP2, startP1, duration, tile2.settings.swapCurve.Evaluate,
@@ -97,6 +102,11 @@ public class SwapAction : ChangeAction
                 isComplete2 = true;
                 CheckComplete();
             });
+        }
+        else
+        {
+            isComplete2 = true;
+            CheckComplete();
         }
     }
 
