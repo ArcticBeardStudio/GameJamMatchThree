@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class ChangeStack<T> where T : ChangeInfo
 {
-    public Action resolveCallback;
+    public Action<List<T>> resolveCallback;
 
     public int length { get { return stack == null ? 0 : stack.Count; } }
 
     bool isOpen;
     List<T> stack;
+    List<T> history;
 
-    public ChangeStack(Action resolveCallback)
+    public ChangeStack(Action<List<T>> resolveCallback)
     {
         this.resolveCallback = resolveCallback;
 
@@ -23,6 +24,7 @@ public class ChangeStack<T> where T : ChangeInfo
     {
         isOpen = true;
         stack = new List<T>();
+        history = new List<T>();
     }
 
     public void Add(T change)
@@ -50,12 +52,13 @@ public class ChangeStack<T> where T : ChangeInfo
         {
             if (change.isComplete) 
             {
+                history.Add(change);
                 stack.Remove(change);
             }
         }
         if (stack.Count <= 0)
         {
-            resolveCallback();
+            resolveCallback(history);
         }
     }
 }
