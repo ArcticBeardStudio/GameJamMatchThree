@@ -16,8 +16,10 @@ public class ChangeAction
     public void DoChange(System.Action callback)
     {
         Debug.Assert(board, "Board is null");
+        ChangeStart();
         board.StartCoroutine(ChangeRoutine(callback));
     }
+    virtual public void ChangeStart() { }
     virtual public IEnumerator ChangeRoutine(System.Action callback)
     {
         yield return new WaitForSeconds(2.0f);
