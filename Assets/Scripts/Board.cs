@@ -148,7 +148,7 @@ public class Board : MonoBehaviour
         return dx * dx + dy * dy == 1;
     }
 
-    public void SwapResolved()
+    public void SwapResolved(List<SwapInfo> history)
     {
         // Do after swap stuff
         // If not filled
@@ -162,12 +162,12 @@ public class Board : MonoBehaviour
         }
         removeStack.End();
     }
-    public void CreateResolved()
+    public void CreateResolved(List<CreateInfo> history)
     {
         // Do after create stuff
         Debug.Log("Create Done");
     }
-    public void RemoveResolved()
+    public void RemoveResolved(List<RemoveInfo> history)
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
