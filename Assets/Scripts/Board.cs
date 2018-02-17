@@ -165,83 +165,84 @@ public class Board : MonoBehaviour
 
         foreach (SwapAction swapInfo in history)
         {
-            var matchesOnTile1 = FindMatchesAt(swapInfo.p1.x, swapInfo.p1.y, 3);
-            var matchesOnTile2 = FindMatchesAt(swapInfo.p2.x, swapInfo.p2.y, 3);
-
-            matches = matchesOnTile1.Union(matchesOnTile2).ToList();
+            matches = matches.Union(GetAllMatches(swapInfo)).ToList();
         }
-        if(history.Count == 1 && history[0].swapReason == SwapReason.PlayerInput)
+        //Enter here if the player made the swap and there's no match, swap back the tiles
+        if(history.Count == 1 && history[0].swapReason == SwapReason.PlayerInput && matches.Count < 3)
         {
-            if(matches.Count < 3)
+            swapStack.Begin();
+            Debug.Log("Didnt find a match");
+            swapStack.Add(new SwapAction(this,
+                                    history[0].p1,
+                                    history[0].p2));
+            swapStack.End();
+        }
+        //If we found a match, remove all matches
+        if(matches.Count >= 3)
+        {
+            removeStack.Begin();
+            Debug.Log("Found a match");
+            foreach (Tile tile in matches)
             {
-                swapStack.Begin();
-                Debug.Log("Didnt find a match");
-                swapStack.Add(new SwapAction(this,
-                                      history[0].p1,
-                                      history[0].p2));
-                swapStack.End();
+                removeStack.Add(new RemoveAction(this, tile.x, tile.y));
             }
-            else
-            {
-                Debug.Log("FOUND A MATCH YAY :D ");
-            }
+            removeStack.End();
         }
-        if (matches.Count <= 0)
-        {
-            RefillBoard();
-        }
-
-        removeStack.Begin();
-        foreach (Tile tile in matches)
-        {
-            removeStack.Add(new RemoveAction(this, tile.x, tile.y));
-        }
-        removeStack.End();
     }
+
     public void CreateResolved(List<CreateAction> history)
     {
         // Do after create stuff
-        Debug.Log("Create Done");
+        //Debug.Log("Create Done");
     }
     public void RemoveResolved(List<RemoveAction> history)
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
-        List<int> removedColumns = new List<int>();
+        List<int> columnsToRemove = new List<int>();
         foreach (RemoveAction removeAction in history)
         {
-            if (!removedColumns.Contains(removeAction.x))
+            if (!columnsToRemove.Contains(removeAction.x))
             {
-                removedColumns.Add(removeAction.x);
+                columnsToRemove.Add(removeAction.x);
             }
         }
 
-        foreach (int column in removedColumns)
-        {
-            CollapseColumn(column);
-        }
+        CollapseColumns(columnsToRemove);
     }
 
-    private void CollapseColumn(int column, float collapseTime = 0.1f)
+    private void CollapseColumns(List<int> columns, float collapseTime = 0.1f)
     {
-        Debug.Log("Remove column: " + column);
-
         swapStack.Begin();
-        for (int i = 0; i < height - 1; i++)
+        Debug.Log("Collumn list length: " + columns.Count);
+        foreach (int column in columns)
         {
-            if (IsEmpty(column, i))
+            for (int i = 0; i < height - 1; i++)
             {
-                for (int j = i + 1; j < height; j++)
+                if (IsEmpty(column, i))
                 {
-                    if (!IsEmpty(column, j))
+                    for (int j = i + 1; j < height; j++)
                     {
-                        swapStack.Add(new SwapAction(this,
-                                      new Vector2Int(column, j),
-                                      new Vector2Int(column, i)));
-                        break;
+                        if (!IsEmpty(column, j))
+                        {
+                            swapStack.Add(new SwapAction(this,
+                                          new Vector2Int(column, j),
+                                          new Vector2Int(column, i)));
+                            break;
+                        }
                     }
                 }
             }
+        }
+        //If we didnt need to swap, then we refill the board
+        if(swapStack.length <= 0)
+        {
+            Debug.Log("Didnt need to swap, refill board");
+            RefillBoard();
+        }
+        else
+        {
+            Debug.Log("Collapse columns, length of swapStack is: " + swapStack.length);
         }
         swapStack.End();
     }
@@ -335,6 +336,17 @@ public class Board : MonoBehaviour
 
         var combinedMatches = horizontalMatches.Union(verticalMatches).ToList();
         return combinedMatches;
+    }
+
+    private List<Tile> GetAllMatches(SwapAction swapInfo)
+    {
+        List<Tile> matches = new List<Tile>();
+
+        var matchesOnTile1 = FindMatchesAt(swapInfo.p1.x, swapInfo.p1.y, 3);
+        var matchesOnTile2 = FindMatchesAt(swapInfo.p2.x, swapInfo.p2.y, 3);
+
+        matches = matchesOnTile1.Union(matchesOnTile2).ToList();
+        return matches;
     }
 
     private bool IsWithinBounds(int x, int y)
