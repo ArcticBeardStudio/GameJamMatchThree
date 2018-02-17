@@ -5,13 +5,13 @@ using UnityEngine;
 
 public enum TileTypes
 {
+    None,
     Sword,
     Shield,
     Potion,
     Red,
     Green,
     Blue,
-    None
 }
 
 public class Board : MonoBehaviour
@@ -48,7 +48,8 @@ public class Board : MonoBehaviour
         }
     }
 
-    void OnGUI() {
+    void OnGUI()
+    {
         if (!debug)
         {
             return;
@@ -77,11 +78,21 @@ public class Board : MonoBehaviour
 
     void SetupTiles()
     {
+        RefillBoard();
+    }
+
+    void RefillBoard()
+    {
         createStack.Begin();
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
+                if (GetTileType(x, y) != TileTypes.None)
+                {
+                    continue;
+                }
+
                 TileTypes tileType = GetRandomTileType();
 
                 int tileLeft = x > 0 ? (int)GetTileType(x - 1, y) : -1;
@@ -96,24 +107,7 @@ public class Board : MonoBehaviour
         }
         createStack.End();
     }
-    /*
-    void RefillBoard()
-    {
-        createStack.Begin();
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                if(GetTileType(x,y) == TileTypes.None)
-                {
-                    TileTypes tileType = GetRandomTileType();
-                    createStack.Add(new CreateAction(this, x, y, tileType));
-                }
-            }
-        }
-        createStack.End();
-    }
-    */
+
     public Vector3 GetTileLocalPosition(int x, int y)
     {
         return new Vector3(((x + 0.5f) - width * 0.5f) * tileWidth, ((y + 0.5f) - height * 0.5f) * tileHeight);
@@ -130,7 +124,7 @@ public class Board : MonoBehaviour
 
     public TileTypes GetRandomTileType()
     {
-        return (TileTypes)Random.Range(0, System.Enum.GetNames(typeof(TileTypes)).Length - 1);
+        return (TileTypes)(Random.Range(1, System.Enum.GetNames(typeof(TileTypes)).Length));
     }
 
     public Tile GetTile(int x, int y)
@@ -167,12 +161,6 @@ public class Board : MonoBehaviour
 
     public void SwapResolved(List<SwapAction> history)
     {
-        // Do after swap stuff
-        // If not filled
-        // Refill
-        // Else \/
-        //Vector2Int[] matches = FindMatches();
-
         List<Tile> matches = new List<Tile>();
 
         foreach (SwapAction swapInfo in history)
@@ -181,6 +169,11 @@ public class Board : MonoBehaviour
             var matchesOnTile2 = FindMatchesAt(swapInfo.p2.x, swapInfo.p2.y, 3);
 
             matches = matchesOnTile1.Union(matchesOnTile2).ToList();
+        }
+
+        if (matches.Count <= 0)
+        {
+            RefillBoard();
         }
 
         removeStack.Begin();
@@ -200,20 +193,18 @@ public class Board : MonoBehaviour
         // Do after remove stuff
         Debug.Log("Remove Done");
         List<int> removedColumns = new List<int>();
-        foreach(RemoveAction removeAction in history)
+        foreach (RemoveAction removeAction in history)
         {
-            if(!removedColumns.Contains(removeAction.x))
+            if (!removedColumns.Contains(removeAction.x))
             {
                 removedColumns.Add(removeAction.x);
             }
         }
 
-        foreach(int column in removedColumns)
+        foreach (int column in removedColumns)
         {
             CollapseColumn(column);
         }
-        //CollapseColumn()
-        //FallGems();
     }
 
     /*public void FallGems()
@@ -244,15 +235,15 @@ public class Board : MonoBehaviour
     private void CollapseColumn(int column, float collapseTime = 0.1f)
     {
         Debug.Log("Remove column: " + column);
-        swapStack.Begin();
 
-        for(int i=0; i<height-1;i++)
+        swapStack.Begin();
+        for (int i = 0; i < height - 1; i++)
         {
-            if(IsEmpty(column,i))
+            if (IsEmpty(column, i))
             {
-                for(int j = i+1;j<height;j++)
+                for (int j = i + 1; j < height; j++)
                 {
-                    if(!IsEmpty(column,j))
+                    if (!IsEmpty(column, j))
                     {
                         swapStack.Add(new SwapAction(this,
                                       new Vector2Int(column, j),
@@ -275,7 +266,7 @@ public class Board : MonoBehaviour
             startTile = tiles[startY, startX];
         }
 
-        if(startTile != null)
+        if (startTile != null)
         {
             matches.Add(startTile);
         }
@@ -287,15 +278,15 @@ public class Board : MonoBehaviour
         int nextX;
         int nextY;
 
-        int maxValue = (width>height) ? width: height;
+        int maxValue = (width > height) ? width : height;
 
-        for (int i=1; i<maxValue-1;i++)
+        for (int i = 1; i < maxValue - 1; i++)
         {
             nextX = startX + (int)Mathf.Clamp(searchDirection.x, -1, 1) * i;
             nextY = startY + (int)Mathf.Clamp(searchDirection.y, -1, 1) * i;
 
             //Check if we're outside of the bounds
-            if(!IsWithinBounds(nextX,nextY))
+            if (!IsWithinBounds(nextX, nextY))
             {
                 break;
             }
@@ -319,7 +310,7 @@ public class Board : MonoBehaviour
             }
         }
 
-        if(matches.Count >= minLength)
+        if (matches.Count >= minLength)
         {
             return matches;
         }

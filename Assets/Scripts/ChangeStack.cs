@@ -44,6 +44,9 @@ public class ChangeStack<T> where T : ChangeAction
         {
             change.DoChange(CheckResolved);
         }
+        if (length <= 0) {
+            resolveCallback(new List<T>());
+        }
     }
 
     void CheckResolved() 
