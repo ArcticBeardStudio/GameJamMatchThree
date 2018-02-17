@@ -207,31 +207,6 @@ public class Board : MonoBehaviour
         }
     }
 
-    /*public void FallGems()
-    {
-        swapStack.Begin();
-        for (int x = 0; x < width; x++)
-        {
-            int emptyY = -1;
-            for (int y = 0; y < height; y++)
-            {
-                if (IsEmpty(x, y) && emptyY < 0)
-                {
-                    emptyY = y;
-                    continue;
-                }
-                if (!IsEmpty(x, y) && emptyY >= 0)
-                {
-                    swapStack.Add(new SwapAction(this, 
-                        new Vector2Int(x, y), 
-                        new Vector2Int(x, emptyY)
-                    ));
-                }
-            }
-        }
-        swapStack.End();
-    }*/
-
     private void CollapseColumn(int column, float collapseTime = 0.1f)
     {
         Debug.Log("Remove column: " + column);
