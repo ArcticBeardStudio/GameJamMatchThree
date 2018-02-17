@@ -36,3 +36,7 @@ sysinfo.txt
 
 # VS Code
 /.vscode/
+
+# Blender
+*.blend*
+!*.blend

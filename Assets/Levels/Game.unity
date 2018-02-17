@@ -315,6 +315,11 @@ Prefab:
       propertyPath: m_Name
       value: Board0
       objectReference: {fileID: 0}
+    - target: {fileID: 114802137433765682, guid: e72b1464ce6f78e4e9af701eb1c3cbfd,
+        type: 2}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e72b1464ce6f78e4e9af701eb1c3cbfd, type: 2}
   m_IsPrefabParent: 0

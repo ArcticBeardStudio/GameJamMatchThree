@@ -25,7 +25,7 @@ public class CreateAction : ChangeAction
 
         if (tileType != TileTypes.None)
         {
-            Tile newTile = GameObject.Instantiate<Tile>(board.settings.tilePrefabs[(int)tileType], board.transform);
+            Tile newTile = GameObject.Instantiate<Tile>(board.settings.tilePrefabs[(int)tileType - 1], board.transform);
             newTile.transform.localPosition = board.GetTileLocalPosition(x, y);
             newTile.Init(x, y, board);
             board.SetTile(x, y, newTile);
