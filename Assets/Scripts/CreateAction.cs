@@ -19,6 +19,11 @@ public class CreateAction : ChangeAction
         board.SetTileType(x, y, tileType);
     }
 
+    override public void ChangeStart()
+    {
+        isComplete = true;
+    }
+
     override public void ChangeEnd()
     {
         Debug.AssertFormat(!board.GetTile(x, y), "Tile at {0} already exists, cant create there!", board.GetTile(x, y));

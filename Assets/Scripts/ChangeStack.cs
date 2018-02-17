@@ -44,9 +44,6 @@ public class ChangeStack<T> where T : ChangeAction
         {
             change.DoChange(CheckResolved);
         }
-        if (length <= 0) {
-            resolveCallback(new List<T>());
-        }
     }
 
     void CheckResolved() 
@@ -59,7 +56,7 @@ public class ChangeStack<T> where T : ChangeAction
                 stack.Remove(change);
             }
         }
-        if (stack.Count <= 0)
+        if (length <= 0)
         {
             resolveCallback(history);
         }

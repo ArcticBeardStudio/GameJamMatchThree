@@ -20,6 +20,11 @@ public class RemoveAction : ChangeAction
         board.SetTileType(x, y, TileTypes.None);
     }
 
+    override public void ChangeStart()
+    {
+        isComplete = true;
+    }
+
     override public void ChangeEnd()
     {
         Debug.AssertFormat(tile, "Tile at {0} must exists, cant remove there!", tile.ToString());

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DigitalRuby.Tween;
 
 public class SwapAction : ChangeAction
 {
@@ -16,6 +17,9 @@ public class SwapAction : ChangeAction
     float startTime;
     float progress;
     float duration = 1.0f;
+
+    bool isComplete1 = false;
+    bool isComplete2 = false;
 
     public SwapAction(Board board, Vector2Int p1, Vector2Int p2)
         : base(board)
@@ -57,21 +61,40 @@ public class SwapAction : ChangeAction
 
         startTime = Time.time;
         progress = 0.0f;
-    }
-
-    override public bool ChangeUpdate()
-    {
-        progress = Time.time - startTime / duration;
 
         if (tile1)
         {
-            tile1.transform.localPosition = Vector3.Lerp(startP1, startP2, tile1.settings.swapCurve.Evaluate(progress));
+            TweenFactory.Tween(null, startP1, startP2, duration, tile1.settings.swapCurve.Evaluate,
+            (ITween<Vector3> tween) =>
+            {
+                if (tile1) tile1.transform.localPosition = tween.CurrentValue;
+            },
+            (ITween<Vector3> tween) =>
+            {
+                isComplete1 = true;
+                CheckComplete();
+            });
         }
         if (tile2)
         {
-            tile2.transform.localPosition = Vector3.Lerp(startP2, startP1, tile2.settings.swapCurve.Evaluate(progress));
+            TweenFactory.Tween(null, startP2, startP1, duration, tile2.settings.swapCurve.Evaluate,
+            (ITween<Vector3> tween) =>
+            {
+                if (tile2) tile2.transform.localPosition = tween.CurrentValue;
+            },
+            (ITween<Vector3> tween) =>
+            {
+                isComplete2 = true;
+                CheckComplete();
+            });
         }
+    }
 
-        return progress >= 1.0f;
+    void CheckComplete()
+    {
+        if (isComplete1 && isComplete2)
+        {
+            isComplete = true;
+        }
     }
 }

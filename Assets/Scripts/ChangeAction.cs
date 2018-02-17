@@ -38,7 +38,7 @@ public class ChangeAction
     /// Called every frame while change is started and not completed
     /// </summary>
     /// <returns>Returns true if change is completed</returns>
-    virtual public bool ChangeUpdate() { return true; }
+    virtual public bool ChangeUpdate() { return isComplete; }
     /// <summary>
     /// Called when change is completed
     /// </summary>
