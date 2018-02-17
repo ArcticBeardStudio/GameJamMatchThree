@@ -55,7 +55,17 @@ public class SwapAction : ChangeAction
     }
     public SwapAction(Board board, Tile tile1, Tile tile2) : this(board, tile1.boardPos, tile2.boardPos) { }
 
-    bool SwapAnimation(Tile tile1, Tile tile2)
+    override public void ChangeStart()
+    {
+        // init anim
+        startP1 = board.GetTileLocalPosition(p1.x, p1.y);
+        startP2 = board.GetTileLocalPosition(p2.x, p2.y);
+
+        startTime = Time.time;
+        progress = 0.0f;
+    }
+
+    override public bool ChangeUpdate()
     {
         progress = Time.time - startTime / duration;
 
@@ -69,23 +79,5 @@ public class SwapAction : ChangeAction
         }
 
         return progress >= 1.0f;
-    }
-
-    override public void ChangeStart()
-    {
-        // init anim
-        startP1 = board.GetTileLocalPosition(p1.x, p1.y);
-        startP2 = board.GetTileLocalPosition(p2.x, p2.y);
-
-        startTime = Time.time;
-        progress = 0.0f;
-    }
-    override public IEnumerator ChangeRoutine(System.Action callback)
-    {
-        // update visuals
-        yield return new WaitUntil(() => SwapAnimation(tile1, tile2));
-
-        isComplete = true;
-        callback();
     }
 }

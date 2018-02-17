@@ -20,18 +20,11 @@ public class RemoveAction : ChangeAction
         board.SetTileType(x, y, TileTypes.None);
     }
 
-    override public IEnumerator ChangeRoutine(System.Action callback)
+    override public void ChangeEnd()
     {
-        yield return null;
-
-        // visual logic
-
         Debug.AssertFormat(tile, "Tile at {0} must exists, cant remove there!", tile.ToString());
 
         board.SetTile(x, y, null);
         GameObject.Destroy(tile.gameObject);
-
-        isComplete = true;
-        callback();        
     }
 }
