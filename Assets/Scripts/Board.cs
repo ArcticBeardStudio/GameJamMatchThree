@@ -84,6 +84,8 @@ public class Board : MonoBehaviour
     void RefillBoard()
     {
         createStack.Begin();
+        Debug.Log("Refill the board");
+        var iterator = 0;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -92,7 +94,7 @@ public class Board : MonoBehaviour
                 {
                     continue;
                 }
-
+                iterator++;
                 TileTypes tileType = GetRandomTileType();
 
                 int tileLeft = x > 0 ? (int)GetTileType(x - 1, y) : -1;
@@ -105,6 +107,7 @@ public class Board : MonoBehaviour
                 createStack.Add(new CreateAction(this, x, y, tileType));
             }
         }
+        Debug.Log("Added this many new elements: " + iterator);
         createStack.End();
     }
 
@@ -161,6 +164,7 @@ public class Board : MonoBehaviour
 
     public void SwapResolved(List<SwapAction> history)
     {
+        Debug.Log("Swap resolved");
         List<Tile> matches = new List<Tile>();
 
         foreach (SwapAction swapInfo in history)
@@ -243,6 +247,7 @@ public class Board : MonoBehaviour
         else
         {
             Debug.Log("Collapse columns, length of swapStack is: " + swapStack.length);
+            Debug.Log("Check if resolved: " + swapStack.isResolved);
         }
         swapStack.End();
     }
@@ -365,6 +370,11 @@ public class Board : MonoBehaviour
             return true;
         }
 
+        return false;
+    }
+
+    private bool NeedsToRefill()
+    {
         return false;
     }
 }
