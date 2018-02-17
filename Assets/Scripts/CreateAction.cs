@@ -15,6 +15,7 @@ public class CreateAction : ChangeAction
         this.y = y;
         this.tileType = tileType;
         
+        // data logic
         board.SetTileType(x, y, tileType);
     }
 
@@ -22,6 +23,7 @@ public class CreateAction : ChangeAction
     {
         yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
         
+        // visual logic
         Debug.AssertFormat(!board.GetTile(x, y), "Tile at {0} already exists, cant create there!", board.GetTile(x, y));
 
         if (tileType != TileTypes.None)

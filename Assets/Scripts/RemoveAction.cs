@@ -7,21 +7,28 @@ public class RemoveAction : ChangeAction
     public int x;
     public int y;
 
+    Tile tile;
+
     public RemoveAction(Board board, int x, int y)
         : base(board)
     {
         this.x = x;
         this.y = y;
+        this.tile = board.GetTile(x, y);
+
+        // data logic
+        board.SetTileType(x, y, TileTypes.None);
     }
 
     override public IEnumerator ChangeRoutine(System.Action callback)
     {
-        yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
-        
-        Debug.AssertFormat(board.GetTile(x, y), "Tile at {0} must exists, cant remove there!", board.GetTile(x, y).ToString());
+        yield return null;
 
-        var tile = board.GetTile(x, y);
-        board.SetTileType(x, y, TileTypes.None);
+        // visual logic
+
+        Debug.AssertFormat(tile, "Tile at {0} must exists, cant remove there!", tile.ToString());
+
+        board.SetTile(x, y, null);
         GameObject.Destroy(tile.gameObject);
 
         isComplete = true;

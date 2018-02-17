@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Tile tile = hit.collider.GetComponent<Tile>();
+                
                 if (!selected)
                 {
                     selected = tile;
