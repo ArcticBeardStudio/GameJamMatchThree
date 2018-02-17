@@ -47,6 +47,17 @@ public class Board : MonoBehaviour
         }
     }
 
+    void OnGUI() {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                TileTypes tileType = GetTileType(x, y);
+                GUI.Label(new Rect(new Vector2(x, height - 1 - y) * 64, Vector2.one * 64), tileType.ToString());
+            }
+        }
+    }
+
     public void Init()
     {
         tiles = new Tile[height, width];
@@ -265,7 +276,7 @@ public class Board : MonoBehaviour
         }
         else
         {
-            return null;
+            return new List<Tile>();
         }
 
         int nextX;
