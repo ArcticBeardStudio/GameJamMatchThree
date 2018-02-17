@@ -157,11 +157,20 @@ public class Board : MonoBehaviour
         // Else \/
         //Vector2Int[] matches = FindMatches();
 
+        List<Tile> matches = new List<Tile>();
+
+        foreach (SwapInfo swapInfo in history)
+        {
+            var matchesOnTile1 = FindMatchesAt(swapInfo.p1.x, swapInfo.p1.y, 3);
+            var matchesOnTile2 = FindMatchesAt(swapInfo.p2.x, swapInfo.p2.y, 3);
+
+            matches = matchesOnTile1.Union(matchesOnTile2).ToList();
+        }
 
         removeStack.Begin();
-        foreach (Vector2Int pos in matches)
+        foreach (Tile tile in matches)
         {
-            removeStack.Add(new RemoveInfo(this, pos.x, pos.y));
+            removeStack.Add(new RemoveInfo(this, tile.x, tile.y));
         }
         removeStack.End();
     }
@@ -202,7 +211,7 @@ public class Board : MonoBehaviour
         swapStack.End();
     }
 
-    public Vector2Int[] FindMatches()
+    /*public Vector2Int[] FindMatches()
     {
         var horizontalMatches = new List<Vector2Int>();
         var verticalMatches = new List<Vector2Int>();
@@ -358,7 +367,7 @@ public class Board : MonoBehaviour
 
         Debug.Log("Found matches is: " + allFoundMatches.Count);
         return allFoundMatches.ToArray();
-    }
+    }*/
 
     private List<Tile> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
@@ -367,7 +376,7 @@ public class Board : MonoBehaviour
 
         if (IsWithinBounds(startX, startY))
         {
-            startTile = tiles[startX, startY];
+            startTile = tiles[startY, startX];
         }
 
         if(startTile != null)
@@ -394,7 +403,7 @@ public class Board : MonoBehaviour
             {
                 break;
             }
-            Tile nextTile = tiles[nextX, nextY];
+            Tile nextTile = tiles[nextY, nextX];
             if (nextTile == null)
             {
                 break;
@@ -429,7 +438,7 @@ public class Board : MonoBehaviour
 
         var combinedMatches = rightMatches.Union(leftMatches).ToList();
 
-        return (combinedMatches.Count >= minLength) ? combinedMatches : null;
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Tile>();
     }
 
     private List<Tile> FindVerticalMatches(int startX, int startY, int minLength = 3)
@@ -439,7 +448,16 @@ public class Board : MonoBehaviour
 
         var combinedMatches = upwardMatches.Union(downwardMatches).ToList();
 
-        return (combinedMatches.Count >= minLength) ? combinedMatches : null;
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Tile>();
+    }
+
+    private List<Tile> FindMatchesAt(int x, int y, int minLength = 3)
+    {
+        List<Tile> horizontalMatches = FindHorizontalMatches(x, y, minLength);
+        List<Tile> verticalMatches = FindVerticalMatches(x, y, minLength);
+
+        var combinedMatches = horizontalMatches.Union(verticalMatches).ToList();
+        return combinedMatches;
     }
 
     private bool IsWithinBounds(int x, int y)
