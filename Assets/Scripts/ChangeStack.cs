@@ -10,6 +10,7 @@ public class ChangeStack<T> where T : ChangeAction
     public int length { get { return stack == null ? 0 : stack.Count; } }
 
     bool isOpen;
+    bool isResolved;
     List<T> stack;
     List<T> history;
 
@@ -18,10 +19,12 @@ public class ChangeStack<T> where T : ChangeAction
         this.resolveCallback = resolveCallback;
 
         isOpen = false;
+        isResolved = false;
     }
 
     public void Begin()
     {
+        isResolved = false;
         isOpen = true;
         stack = new List<T>();
         history = new List<T>();
@@ -46,19 +49,20 @@ public class ChangeStack<T> where T : ChangeAction
         }
     }
 
-    void CheckResolved() 
+    void CheckResolved()
     {
         foreach (T change in stack.ToArray())
         {
-            if (change.isComplete) 
+            if (change.isComplete)
             {
                 history.Add(change);
                 stack.Remove(change);
             }
         }
-        if (length <= 0)
+        if (stack.Count <= 0 && !isResolved)
         {
             resolveCallback(history);
+            isResolved = true;
         }
     }
 }
