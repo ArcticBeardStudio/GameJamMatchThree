@@ -1,64 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
-public class ChangeStack<T> where T : ChangeAction
+public class ChangeAction
 {
-    public Action<List<T>> resolveCallback;
+    public Board board;
+    public bool isComplete;
 
-    public int length { get { return stack == null ? 0 : stack.Count; } }
-
-    bool isOpen;
-    List<T> stack;
-    List<T> history;
-
-    public ChangeStack(Action<List<T>> resolveCallback)
+    public ChangeAction(Board board)
     {
-        this.resolveCallback = resolveCallback;
-
-        isOpen = false;
+        this.board = board;
+        isComplete = false;
     }
 
-    public void Begin()
+    public void DoChange(System.Action callback)
     {
-        isOpen = true;
-        stack = new List<T>();
-        history = new List<T>();
+        Debug.Assert(board, "Board is null");
+        board.StartCoroutine(ChangeRoutine(callback));
     }
-
-    public void Add(T change)
+    virtual public IEnumerator ChangeRoutine(System.Action callback)
     {
-        if (!isOpen)
-        {
-            Debug.LogWarning("You need to call Begin() on the stack before adding changes. ");
-            return;
-        }
-        stack.Add(change);
-    }
-
-    public void End()
-    {
-        isOpen = false;
-        foreach (T change in stack.ToArray())
-        {
-            change.DoChange(CheckResolved);
-        }
-    }
-
-    void CheckResolved() 
-    {
-        foreach (T change in stack.ToArray())
-        {
-            if (change.isComplete) 
-            {
-                history.Add(change);
-                stack.Remove(change);
-            }
-        }
-        if (stack.Count <= 0)
-        {
-            resolveCallback(history);
-        }
+        yield return new WaitForSeconds(2.0f);
+        isComplete = true;
+        callback();
     }
 }
