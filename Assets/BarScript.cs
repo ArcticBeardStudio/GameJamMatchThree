@@ -19,43 +19,37 @@ public class BarScript : MonoBehaviour {
 
     private float percentage;
 
+    private Player player;
+
     // Use this for initialization
     void Start()
     {
-        string[] temp = manaText.text.Split(':');
-        manaText.text = temp[0] + ":" + " 100";//+ playerStats.MaxHealth;
-
-        string[] temp2 = healthText.text.Split(':');
-        healthText.text = temp2[0] + ":" + " 100";//+ playerStats.MaxMana;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateBar();
+
     }
 
-    private void UpdateBar()
+    public void InitBars(Player newPlayer)
     {
-        /*if (playerStats.GetManaPercentage() != ManaContent.fillAmount)
-        {
-            ManaContent.fillAmount = playerStats.GetManaPercentage();
-            string[] temp = manaText.text.Split(':');
-            manaText.text = temp[0] + ": " + GetGameobject.GetPlayerStats().GetCurrentMana();
-            if (playerStats.GetCurrentMana() != playerStats.MaxMana)
-            {
-                manaText.text += " [" + playerStats.GetManaRegenPerSecond() + "]";
-            }
-        }
-        if (playerStats.GetHealthPercentage() != HealthContent.fillAmount)
-        {
-            HealthContent.fillAmount = playerStats.GetHealthPercentage();
-            string[] temp = healthText.text.Split(':');
-            healthText.text = temp[0] + ": " + GetGameobject.GetPlayerStats().GetHealth();
-            if (playerStats.GetHealth() != playerStats.MaxHealth)
-            {
-                healthText.text += " [" + playerStats.GetHealthRegenPerSecond() + "]";
-            }
-        }*/
+        player = newPlayer;
+        UpdateManaBar();
+        UpdateHealthBar();
+    }
+
+    public void UpdateHealthBar()
+    {
+        HealthContent.fillAmount = player.GetHealthPercentage();
+        string[] temp = healthText.text.Split(':');
+        healthText.text = temp[0] + ": " + player.GetCurrentHealth();
+    }
+
+    public void UpdateManaBar()
+    {
+        ManaContent.fillAmount = player.GetManaPercentage();
+        string[] temp = manaText.text.Split(':');
+        manaText.text = temp[0] + ": " + player.GetCurrentMana();
     }
 }

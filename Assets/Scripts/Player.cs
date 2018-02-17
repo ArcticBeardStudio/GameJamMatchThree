@@ -7,31 +7,84 @@ public class Player : MonoBehaviour
     public int numSwaps = 0;
 
     public int index;
-    public int health;
-    public int mana;
+    public int maxHealth;
+    public int maxMana;
 
+    private int currentMana = 0;
+    private int currentHealth;
     public Board board;
 
     public GameObject bars;
 
-    private GameObject playerBar;
+    private BarScript playerBarscript;
 
     public bool CanMove() { return false; }
 
-    public void ApplyDamage(int amount)
+    public void ModifyHealth(int amount)
     {
-        health -= amount;
+        currentHealth += amount;
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else if(currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Debug.Log(this.name + " YOU ARE DED");
+        }
+        playerBarscript.UpdateHealthBar();
+    }
+
+    public void ModifyMana(int amount)
+    {
+        currentMana += amount;
+        if (currentMana > maxMana)
+        {
+            currentMana = maxMana;
+        }
+        else if (currentMana <= 0)
+        {
+            currentMana = 0;
+        }
+        playerBarscript.UpdateManaBar();
     }
 
     public Tile selected = null;
 
     private void Start()
     {
-        if(bars != null)
+        currentHealth = maxHealth;
+        CreateBar();
+    }
+
+    public void CreateBar()
+    {
+        if (bars != null)
         {
-            playerBar = GameObject.Instantiate(bars);
+            var playerBar = GameObject.Instantiate(bars);
+            playerBarscript = playerBar.GetComponent<BarScript>();
+            playerBarscript.InitBars(this);
         }
-        playerBar.SetActive(false);
+    }
+
+    public float GetManaPercentage()
+    {
+        return (float)currentMana / (float)maxMana;
+    }
+
+    public int GetCurrentMana()
+    {
+        return currentMana;
+    }
+
+    public float GetHealthPercentage()
+    {
+        return (float)currentHealth / (float)maxHealth;
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
     }
 
     void Update()
@@ -60,6 +113,10 @@ public class Player : MonoBehaviour
                     selected = null;
                 }
             }
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ModifyHealth(-5);
         }
     }
 }

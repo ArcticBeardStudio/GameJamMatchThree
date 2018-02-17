@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     void Init()
     {
         currentGameState = GameStates.PrePlay;
-        //Give each player a healthbar
     }
 
     void Awake()

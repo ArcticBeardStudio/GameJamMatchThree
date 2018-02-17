@@ -248,6 +248,21 @@ Prefab:
       value: 
       objectReference: {fileID: 1961955335267742, guid: 03b102f226108c7488098e7c6c161441,
         type: 2}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: mana
+      value: 76
+      objectReference: {fileID: 0}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: maxHealth
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: maxMana
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6791b13d69f0aaf498475aa626280746, type: 2}
   m_IsPrefabParent: 0
@@ -364,7 +379,7 @@ Prefab:
       objectReference: {fileID: 1283861670}
     - target: {fileID: 1464583392817102, guid: 6791b13d69f0aaf498475aa626280746, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
         type: 2}
@@ -372,6 +387,21 @@ Prefab:
       value: 
       objectReference: {fileID: 1400903631886772, guid: c045be01e75ac9540a1c3092fcbb6277,
         type: 2}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: mana
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: maxHealth
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114254055728130896, guid: 6791b13d69f0aaf498475aa626280746,
+        type: 2}
+      propertyPath: maxMana
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6791b13d69f0aaf498475aa626280746, type: 2}
   m_IsPrefabParent: 0

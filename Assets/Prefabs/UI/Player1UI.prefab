@@ -172,7 +172,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224026540097236816}
-  - component: {fileID: 114992696767409878}
   m_Layer: 5
   m_Name: PlayerBars
   m_TagString: Untagged
@@ -208,6 +207,7 @@ GameObject:
   - component: {fileID: 223920568636242454}
   - component: {fileID: 114487310053016088}
   - component: {fileID: 114035725592679610}
+  - component: {fileID: 114071501555528008}
   m_Layer: 5
   m_Name: Player1UI
   m_TagString: Untagged
@@ -285,6 +285,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114071501555528008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1961955335267742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 399c6c0749e1bbb4d9e43864d679fd4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthContent: {fileID: 114272775912189190}
+  healthText: {fileID: 114474901460444350}
+  ManaContent: {fileID: 114382183660984464}
+  manaText: {fileID: 114676945070150122}
 --- !u!114 &114272775912189190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -534,21 +549,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114992696767409878
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1852338693698392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 399c6c0749e1bbb4d9e43864d679fd4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HealthContent: {fileID: 114272775912189190}
-  healthText: {fileID: 114474901460444350}
-  ManaContent: {fileID: 114382183660984464}
-  manaText: {fileID: 114676945070150122}
 --- !u!222 &222109428226326704
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 223488890887690234}
   - component: {fileID: 114194028024896560}
   - component: {fileID: 114154795569148704}
+  - component: {fileID: 114018013419659966}
   m_Layer: 5
   m_Name: Player2UI
   m_TagString: Untagged
@@ -139,7 +140,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224542160268145344}
-  - component: {fileID: 114362601777071694}
   m_Layer: 5
   m_Name: PlayerBars
   m_TagString: Untagged
@@ -242,6 +242,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114018013419659966
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1400903631886772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 399c6c0749e1bbb4d9e43864d679fd4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthContent: {fileID: 114732985863545860}
+  healthText: {fileID: 114123743153998122}
+  ManaContent: {fileID: 114415494035888908}
+  manaText: {fileID: 114055399096303544}
 --- !u!114 &114055399096303544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -345,21 +360,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114362601777071694
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1485767844831820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 399c6c0749e1bbb4d9e43864d679fd4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HealthContent: {fileID: 114732985863545860}
-  healthText: {fileID: 114123743153998122}
-  ManaContent: {fileID: 114415494035888908}
-  manaText: {fileID: 114055399096303544}
 --- !u!114 &114415494035888908
 MonoBehaviour:
   m_ObjectHideFlags: 1
