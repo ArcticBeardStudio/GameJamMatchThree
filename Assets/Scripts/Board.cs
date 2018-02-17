@@ -241,6 +241,7 @@ public class Board : MonoBehaviour
                         swapStack.Add(new SwapAction(this,
                                       new Vector2Int(column, j),
                                       new Vector2Int(column, i)));
+                        break;
                     }
                 }
             }
