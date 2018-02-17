@@ -22,19 +22,38 @@ public class ChangeAction
     }
 
     /// <summary>
-    /// 
+    /// Starts the chanage process
     /// </summary>
-    /// <param name="callback"></param>
+    /// <param name="callback">Called when change is completed</param>
     public void DoChange(System.Action callback)
     {
         Debug.Assert(board, "Board is null");
-        ChangeStart();
         board.StartCoroutine(ChangeRoutine(callback));
     }
+    /// <summary>
+    /// Called when change is started
+    /// </summary>
     virtual public void ChangeStart() { }
+    /// <summary>
+    /// Called every frame while change is started and not completed
+    /// </summary>
+    /// <returns>Returns true if change is completed</returns>
+    virtual public bool ChangeUpdate() { return true; }
+    /// <summary>
+    /// Called when change is completed
+    /// </summary>
+    virtual public void ChangeEnd() { }
+    
+    /// <summary>
+    /// Controls the change lifecycle
+    /// </summary>
+    /// <param name="callback">Called when change is completed</param>
     virtual public IEnumerator ChangeRoutine(System.Action callback)
     {
-        yield return new WaitForSeconds(2.0f);
+        ChangeStart();
+        yield return new WaitUntil(ChangeUpdate);
+        ChangeEnd();
+        
         isComplete = true;
         callback();
     }
