@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     
     public Board board;
 
+
     public bool CanMove() { return false; }
 
     public void ApplyDamage(int amount)
