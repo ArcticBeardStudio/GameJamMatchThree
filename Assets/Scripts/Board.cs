@@ -80,7 +80,7 @@ public class Board : MonoBehaviour
         }
         createStack.End();
     }
-
+    /*
     void RefillBoard()
     {
         createStack.Begin();
@@ -97,7 +97,7 @@ public class Board : MonoBehaviour
         }
         createStack.End();
     }
-
+    */
     public Vector3 GetTileLocalPosition(int x, int y)
     {
         return new Vector3(((x + 0.5f) - width * 0.5f) * tileWidth, ((y + 0.5f) - height * 0.5f) * tileHeight);
@@ -183,10 +183,24 @@ public class Board : MonoBehaviour
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
-        FallGems();
+        List<int> removedColumns = new List<int>();
+        foreach(RemoveAction removeAction in history)
+        {
+            if(!removedColumns.Contains(removeAction.x))
+            {
+                removedColumns.Add(removeAction.x);
+            }
+        }
+
+        foreach(int column in removedColumns)
+        {
+            CollapseColumn(column);
+        }
+        //CollapseColumn()
+        //FallGems();
     }
 
-    public void FallGems()
+    /*public void FallGems()
     {
         swapStack.Begin();
         for (int x = 0; x < width; x++)
@@ -205,6 +219,29 @@ public class Board : MonoBehaviour
                         new Vector2Int(x, y), 
                         new Vector2Int(x, emptyY)
                     ));
+                }
+            }
+        }
+        swapStack.End();
+    }*/
+
+    private void CollapseColumn(int column, float collapseTime = 0.1f)
+    {
+        Debug.Log("Remove column: " + column);
+        swapStack.Begin();
+
+        for(int i=0; i<height-1;i++)
+        {
+            if(IsEmpty(column,i))
+            {
+                for(int j = i+1;j<height;j++)
+                {
+                    if(!IsEmpty(column,j))
+                    {
+                        swapStack.Add(new SwapAction(this,
+                                      new Vector2Int(column, j),
+                                      new Vector2Int(column, i)));
+                    }
                 }
             }
         }
