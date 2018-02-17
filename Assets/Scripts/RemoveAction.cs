@@ -18,6 +18,8 @@ public class RemoveAction : ChangeAction
 
         // data logic
         board.SetTileType(x, y, TileTypes.None);
+
+        board.SetTile(x, y, null);
     }
 
     override public void ChangeStart()
@@ -29,7 +31,6 @@ public class RemoveAction : ChangeAction
     {
         Debug.AssertFormat(tile, "Tile at {0} must exists, cant remove there!", tile.ToString());
 
-        board.SetTile(x, y, null);
         GameObject.Destroy(tile.gameObject);
     }
 }
