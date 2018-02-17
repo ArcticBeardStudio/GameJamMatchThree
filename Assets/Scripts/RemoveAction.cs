@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DigitalRuby.Tween;
 
 public class RemoveAction : ChangeAction
 {
@@ -24,7 +25,15 @@ public class RemoveAction : ChangeAction
 
     override public void ChangeStart()
     {
-        isComplete = true;
+        TweenFactory.Tween(null, 1.0f, 0.0f, 0.2f, TweenScaleFunctions.QuinticEaseIn,
+        (ITween<float> tween) =>
+        {
+            if (tile) tile.transform.localScale = Vector3.one * tween.CurrentValue;
+        },
+        (ITween<float> tween) =>
+        {
+            isComplete = true;
+        });
     }
 
     override public void ChangeEnd()
