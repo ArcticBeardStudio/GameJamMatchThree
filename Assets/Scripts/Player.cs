@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool debug = false;
     public int numSwaps = 0;
 
     public int index;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     public GameObject bars;
 
     private BarScript playerBarscript;
+    private SwapReason swapReason = SwapReason.PlayerInput;
 
     public bool CanMove() { return false; }
 
@@ -104,11 +106,25 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    var bajs = new SwapAction(board, selected, tile);
+                    if(debug)
+                    {
+                        var swapAction = new SwapAction(board, selected, tile);
 
-                    board.swapStack.Begin();
-                    board.swapStack.Add(bajs);
-                    board.swapStack.End();
+                        board.swapStack.Begin();
+                        board.swapStack.Add(swapAction);
+                        board.swapStack.End();
+                    }
+                    else
+                    {
+                        if(board.CheckAdjacent(selected,tile))
+                        {
+                            var swapAction = new SwapAction(board, selected, tile, swapReason);
+
+                            board.swapStack.Begin();
+                            board.swapStack.Add(swapAction);
+                            board.swapStack.End();
+                        }
+                    }
 
                     selected = null;
                 }

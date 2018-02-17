@@ -170,7 +170,22 @@ public class Board : MonoBehaviour
 
             matches = matchesOnTile1.Union(matchesOnTile2).ToList();
         }
-
+        if(history.Count == 1 && history[0].swapReason == SwapReason.PlayerInput)
+        {
+            if(matches.Count < 3)
+            {
+                swapStack.Begin();
+                Debug.Log("Didnt find a match");
+                swapStack.Add(new SwapAction(this,
+                                      history[0].p1,
+                                      history[0].p2));
+                swapStack.End();
+            }
+            else
+            {
+                Debug.Log("FOUND A MATCH YAY :D ");
+            }
+        }
         if (matches.Count <= 0)
         {
             RefillBoard();
@@ -325,5 +340,19 @@ public class Board : MonoBehaviour
     private bool IsWithinBounds(int x, int y)
     {
         return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    public bool CheckAdjacent(Tile t1, Tile t2)
+    {
+        if(Mathf.Abs(t1.x-t2.x) == 1 && Mathf.Abs(t1.y - t2.y) == 0)
+        {
+            return true;
+        }
+        else if(Mathf.Abs(t1.x - t2.x) == 0 && Mathf.Abs(t1.y - t2.y) == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
