@@ -45,8 +45,8 @@ public class SwapAction : ChangeAction
 
     override public void ChangeStart()
     {
-        startP1 = board.GetTile(p1.x, p1.y).transform.position;
-        startP2 = board.GetTile(p2.x, p2.y).transform.position;
+        startP1 = board.GetTile(p1.x, p1.y) ? board.GetTile(p1.x, p1.y).transform.position : Vector3.zero;
+        startP2 = board.GetTile(p2.x, p2.y) ? board.GetTile(p2.x, p2.y).transform.position : Vector3.zero;
 
         startTime = Time.time;
         progress = 0.0f;
