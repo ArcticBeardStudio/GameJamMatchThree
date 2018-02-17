@@ -17,15 +17,7 @@ public class CreateAction : ChangeAction
 
         // data logic
         board.SetTileType(x, y, tileType);
-    }
 
-    override public void ChangeStart()
-    {
-        isComplete = true;
-    }
-
-    override public void ChangeEnd()
-    {
         Debug.AssertFormat(!board.GetTile(x, y), "Tile at {0} already exists, cant create there!", board.GetTile(x, y));
 
         if (tileType != TileTypes.None)
@@ -35,5 +27,15 @@ public class CreateAction : ChangeAction
             newTile.Init(x, y, board);
             board.SetTile(x, y, newTile);
         }
+    }
+
+    override public void ChangeStart()
+    {
+        isComplete = true;
+    }
+
+    override public void ChangeEnd()
+    {
+        
     }
 }

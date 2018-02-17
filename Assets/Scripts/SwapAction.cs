@@ -47,8 +47,8 @@ public class SwapAction : ChangeAction
         board.SetTileType(p1.x, p1.y, previousType2);
         board.SetTileType(p2.x, p2.y, previousType1);
 
-        board.SetTile(p2.x, p2.y, tile1 ? tile1 : null);
-        board.SetTile(p1.x, p1.y, tile2 ? tile2 : null);
+        board.SetTile(p2.x, p2.y, tile1);
+        board.SetTile(p1.x, p1.y, tile2);
 
         if (tile1)
         {

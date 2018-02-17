@@ -238,8 +238,8 @@ public class Board : MonoBehaviour
                         if (!IsEmpty(column, j))
                         {
                             swapStack.Add(new SwapAction(this,
-                                          new Vector2Int(column, j),
-                                          new Vector2Int(column, i)));
+                                          new Vector2Int(column, i),
+                                          new Vector2Int(column, j)));
                             break;
                         }
                     }
