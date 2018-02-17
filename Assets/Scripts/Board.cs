@@ -16,6 +16,7 @@ public enum TileTypes
 
 public class Board : MonoBehaviour
 {
+    public bool debug;
     public BoardSettings settings;
     int width { get { return settings.width; } }
     int height { get { return settings.height; } }
@@ -48,6 +49,10 @@ public class Board : MonoBehaviour
     }
 
     void OnGUI() {
+        if (!debug)
+        {
+            return;
+        }
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
