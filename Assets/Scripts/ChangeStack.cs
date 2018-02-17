@@ -8,9 +8,9 @@ public class ChangeStack<T> where T : ChangeAction
     public Action<List<T>> resolveCallback;
 
     public int length { get { return stack == null ? 0 : stack.Count; } }
+    public bool isOpen { get; protected set; }
+    public bool isResolved { get; protected set; }
 
-    bool isOpen;
-    bool isResolved;
     List<T> stack;
     List<T> history;
 
