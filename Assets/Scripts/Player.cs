@@ -8,9 +8,13 @@ public class Player : MonoBehaviour
 
     public int index;
     public int health;
-    
+    public int mana;
+
     public Board board;
 
+    public GameObject bars;
+
+    private GameObject playerBar;
 
     public bool CanMove() { return false; }
 
@@ -20,6 +24,15 @@ public class Player : MonoBehaviour
     }
 
     public Tile selected = null;
+
+    private void Start()
+    {
+        if(bars != null)
+        {
+            playerBar = GameObject.Instantiate(bars);
+        }
+        playerBar.SetActive(false);
+    }
 
     void Update()
     {
