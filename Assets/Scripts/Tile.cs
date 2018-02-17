@@ -40,7 +40,7 @@ public class Tile : MonoBehaviour
         Vector3 pos = transform.position;
         Vector2 pos2D = HandleUtility.WorldToGUIPoint(pos);
         //GUI.Label(new Rect(pos2D.x, pos2D.y, 100, 100), x + "," + y + board.GetTile(x, y).name + "/" + board.GetTileType(x, y), style);
-        GUI.Label(new Rect(pos2D.x, pos2D.y, 100, 100), board.IsEmpty(x,y).ToString() + " " + board.IsNull(x,y).ToString(), style);
+        GUI.Label(new Rect(pos2D.x, pos2D.y, 100, 100), board.GetTileType(x,y).ToString() + " " + board.IsNull(x,y).ToString(), style);
         Handles.EndGUI();
     }
 }
