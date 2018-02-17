@@ -159,7 +159,7 @@ public class Board : MonoBehaviour
 
         List<Tile> matches = new List<Tile>();
 
-        foreach (SwapInfo swapInfo in history)
+        foreach (SwapAction swapInfo in history)
         {
             var matchesOnTile1 = FindMatchesAt(swapInfo.p1.x, swapInfo.p1.y, 3);
             var matchesOnTile2 = FindMatchesAt(swapInfo.p2.x, swapInfo.p2.y, 3);
@@ -170,7 +170,7 @@ public class Board : MonoBehaviour
         removeStack.Begin();
         foreach (Tile tile in matches)
         {
-            removeStack.Add(new RemoveAction(this, pos.x, pos.y));
+            removeStack.Add(new RemoveAction(this, tile.x, tile.y));
         }
         removeStack.End();
     }
@@ -210,164 +210,6 @@ public class Board : MonoBehaviour
         }
         swapStack.End();
     }
-
-    /*public Vector2Int[] FindMatches()
-    {
-        var horizontalMatches = new List<Vector2Int>();
-        var verticalMatches = new List<Vector2Int>();
-        var allFoundMatches = new List<Vector2Int>();
-
-        //Check horizontal matches
-        for (int y = 0; y < height; y++)
-        {
-            //Checks if we found horizontal match, needed when the last tile is within a match.
-            if (horizontalMatches.Count >= 3)
-            {
-                for (int i = 0; i < horizontalMatches.Count; i++)
-                {
-                    if (!allFoundMatches.Contains(horizontalMatches[i]))
-                    {
-                        allFoundMatches.Add(horizontalMatches[i]);
-                    }
-                }
-            }
-
-            //Clear the horizontalMatches and sets previous type to the first type of the row.
-            horizontalMatches.Clear();
-            TileTypes previousType = GetTileType(0, y);
-            if (previousType != TileTypes.None)
-            {
-                horizontalMatches.Add(new Vector2Int(0, y));
-            }
-            //Loops through the row, starts at one (The first item already added if not none)
-            for (int x = 1; x < width; x++)
-            {
-                //If the current type is same as previous and not none, add to matches
-                if (GetTileType(x, y) == previousType && previousType != TileTypes.None)
-                {
-                    horizontalMatches.Add(new Vector2Int(x, y));
-                }
-                //If we found horizontal matches (And previous type not same as current), add to foundMatches list and empty horizontal match, add the new type to the horizontal matches
-                else if (horizontalMatches.Count >= 3)
-                {
-                    for (int i = 0; i < horizontalMatches.Count; i++)
-                    {
-                        if (!allFoundMatches.Contains(horizontalMatches[i]))
-                        {
-                            allFoundMatches.Add(horizontalMatches[i]);
-                        }
-                    }
-
-                    horizontalMatches.Clear();
-                    previousType = GetTileType(x, y);
-                    if (previousType != TileTypes.None)
-                    {
-                        horizontalMatches.Add(new Vector2Int(x, y));
-                    }
-                }
-                //If we found a new type, empty matches and add to matches if not none type
-                else
-                {
-                    previousType = GetTileType(x, y);
-                    horizontalMatches.Clear();
-                    if (previousType != TileTypes.None)
-                    {
-                        horizontalMatches.Add(new Vector2Int(x, y));
-                    }
-                }
-            }
-        }
-
-        //Checks if we found horizontal match, needed when the last tile is within a match.
-        if (horizontalMatches.Count >= 3)
-        {
-            for (int i = 0; i < horizontalMatches.Count; i++)
-            {
-                if (!allFoundMatches.Contains(horizontalMatches[i]))
-                {
-                    allFoundMatches.Add(horizontalMatches[i]);
-                }
-            }
-        }
-
-
-        for (int x = 0; x < width; x++)
-        {
-            //Checks if we found vertical match, needed when the last tile is within a match.
-            if (verticalMatches.Count >= 3)
-            {
-                for (int i = 0; i < verticalMatches.Count; i++)
-                {
-                    if (!allFoundMatches.Contains(verticalMatches[i]))
-                    {
-                        allFoundMatches.Add(verticalMatches[i]);
-                    }
-                }
-            }
-
-            //Clear the verticalMatches and sets previous type to the first type of the row.
-            verticalMatches.Clear();
-            TileTypes previousType = GetTileType(x, 0);
-            if (previousType != TileTypes.None)
-            {
-                verticalMatches.Add(new Vector2Int(x, 0));
-            }
-
-            //Loops through the row, starts at one (The first item already added if not none)
-            for (int y = 1; y < height; y++)
-            {
-                //If the current type is same as previous and not none, add to matches
-                if (GetTileType(x, y) == previousType && previousType != TileTypes.None)
-                {
-                    verticalMatches.Add(new Vector2Int(x, y));
-                }
-                //If we found vertical matches (And previous type not same as current), add to foundMatches list and empty vertical match, add the new type to the vertical matches
-                else if (verticalMatches.Count >= 3)
-                {
-                    for (int i = 0; i < verticalMatches.Count; i++)
-                    {
-                        if (!allFoundMatches.Contains(verticalMatches[i]))
-                        {
-                            allFoundMatches.Add(verticalMatches[i]);
-                        }
-                    }
-
-                    verticalMatches.Clear();
-                    previousType = GetTileType(x, y);
-                    if (previousType != TileTypes.None)
-                    {
-                        verticalMatches.Add(new Vector2Int(x, y));
-                    }
-                }
-                //If we found a new type, empty matches and add to matches if not none type
-                else
-                {
-                    previousType = GetTileType(x, y);
-                    verticalMatches.Clear();
-                    if (previousType != TileTypes.None)
-                    {
-                        verticalMatches.Add(new Vector2Int(x, y));
-                    }
-                }
-            }
-        }
-
-
-        //Checks if we found horizontal match, needed when the last tile is within a match.
-        if (verticalMatches.Count >= 3)
-        {
-            for (int i = 0; i < verticalMatches.Count; i++)
-            {
-                if (!allFoundMatches.Contains(verticalMatches[i]))
-                {
-                    allFoundMatches.Add(verticalMatches[i]);
-                }
-            }
-        }
-
-        Debug.Log("Found matches is: " + allFoundMatches.Count);
-        return allFoundMatches.ToArray();
-    }*/
 
     private List<Tile> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
