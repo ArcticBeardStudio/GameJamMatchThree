@@ -23,9 +23,9 @@ public class Board : MonoBehaviour
     float tileHeight { get { return settings.tileHeight; } }
     Tile[] tilePrefabs { get { return settings.tilePrefabs; } }
 
-    public ChangeStack<SwapInfo> swapStack;
-    public ChangeStack<CreateInfo> createStack;
-    public ChangeStack<RemoveInfo> removeStack;
+    public ChangeStack<SwapAction> swapStack;
+    public ChangeStack<CreateAction> createStack;
+    public ChangeStack<RemoveAction> removeStack;
 
     Tile[,] tiles;
     TileTypes[,] currentState;
@@ -52,9 +52,9 @@ public class Board : MonoBehaviour
         tiles = new Tile[height, width];
         currentState = new TileTypes[height, width];
 
-        swapStack = new ChangeStack<SwapInfo>(SwapResolved);
-        createStack = new ChangeStack<CreateInfo>(CreateResolved);
-        removeStack = new ChangeStack<RemoveInfo>(RemoveResolved);
+        swapStack = new ChangeStack<SwapAction>(SwapResolved);
+        createStack = new ChangeStack<CreateAction>(CreateResolved);
+        removeStack = new ChangeStack<RemoveAction>(RemoveResolved);
 
         SetupTiles();
     }
@@ -75,7 +75,7 @@ public class Board : MonoBehaviour
                 {
                     tileType = GetRandomTileType();
                 }
-                createStack.Add(new CreateInfo(this, x, y, tileType));
+                createStack.Add(new CreateAction(this, x, y, tileType));
             }
         }
         createStack.End();
@@ -91,7 +91,7 @@ public class Board : MonoBehaviour
                 if(GetTileType(x,y) == TileTypes.None)
                 {
                     TileTypes tileType = GetRandomTileType();
-                    createStack.Add(new CreateInfo(this, x, y, tileType));
+                    createStack.Add(new CreateAction(this, x, y, tileType));
                 }
             }
         }
@@ -149,7 +149,7 @@ public class Board : MonoBehaviour
         return dx * dx + dy * dy == 1;
     }
 
-    public void SwapResolved(List<SwapInfo> history)
+    public void SwapResolved(List<SwapAction> history)
     {
         // Do after swap stuff
         // If not filled
@@ -170,16 +170,16 @@ public class Board : MonoBehaviour
         removeStack.Begin();
         foreach (Tile tile in matches)
         {
-            removeStack.Add(new RemoveInfo(this, tile.x, tile.y));
+            removeStack.Add(new RemoveAction(this, pos.x, pos.y));
         }
         removeStack.End();
     }
-    public void CreateResolved(List<CreateInfo> history)
+    public void CreateResolved(List<CreateAction> history)
     {
         // Do after create stuff
         Debug.Log("Create Done");
     }
-    public void RemoveResolved(List<RemoveInfo> history)
+    public void RemoveResolved(List<RemoveAction> history)
     {
         // Do after remove stuff
         Debug.Log("Remove Done");
@@ -201,7 +201,7 @@ public class Board : MonoBehaviour
                 }
                 if (!IsEmpty(x, y) && emptyY >= 0)
                 {
-                    swapStack.Add(new SwapInfo(this, 
+                    swapStack.Add(new SwapAction(this, 
                         new Vector2Int(x, y), 
                         new Vector2Int(x, emptyY)
                     ));

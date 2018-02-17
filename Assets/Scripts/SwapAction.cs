@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwapInfo : ChangeInfo
+public class SwapAction : ChangeAction
 {
     public Vector2Int p1;
     public Vector2Int p2;
 
-    public SwapInfo(Board board, Vector2Int p1, Vector2Int p2)
+    public SwapAction(Board board, Vector2Int p1, Vector2Int p2)
         :base(board)
     {
         this.p1 = p1;
         this.p2 = p2;
     }
-    public SwapInfo(Board board, Tile t1, Tile t2)
+    public SwapAction(Board board, Tile t1, Tile t2)
         :base(board)
     {
         this.p1 = t1.boardPos;

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateInfo : ChangeInfo
+public class CreateAction : ChangeAction
 {
     public int x;
     public int y;
     public TileTypes tileType;
 
-    public CreateInfo(Board board, int x, int y, TileTypes tileType)
+    public CreateAction(Board board, int x, int y, TileTypes tileType)
         : base(board)
     {
         this.x = x;

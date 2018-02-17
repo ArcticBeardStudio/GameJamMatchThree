@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeInfo
+public class ChangeAction
 {
     public Board board;
     public bool isComplete;
 
-    public ChangeInfo(Board board)
+    public ChangeAction(Board board)
     {
         this.board = board;
         isComplete = false;

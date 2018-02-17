@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RemoveInfo : ChangeInfo
+public class RemoveAction : ChangeAction
 {
     public int x;
     public int y;
 
-    public RemoveInfo(Board board, int x, int y)
+    public RemoveAction(Board board, int x, int y)
         : base(board)
     {
         this.x = x;

@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    var bajs = new SwapInfo(board, selected, tile);
+                    var bajs = new SwapAction(board, selected, tile);
 
                     board.swapStack.Begin();
                     board.swapStack.Add(bajs);
