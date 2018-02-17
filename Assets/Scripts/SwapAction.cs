@@ -10,9 +10,6 @@ public class SwapAction : ChangeAction
     Tile tile1;
     Tile tile2;
 
-    bool isEmpty1;
-    bool isEmpty2;
-
     public Vector2Int p1;
     public Vector2Int p2;
 
@@ -28,9 +25,6 @@ public class SwapAction : ChangeAction
 
         this.tile1 = board.GetTile(p1.x, p1.y);
         this.tile2 = board.GetTile(p2.x, p2.y);
-
-        this.isEmpty1 = board.IsEmpty(p1.x, p1.y);
-        this.isEmpty2 = board.IsEmpty(p2.x, p2.y);
 
         // change data
         var previousType1 = board.GetTileType(p1.x, p1.y);
