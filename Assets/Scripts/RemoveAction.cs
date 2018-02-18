@@ -13,17 +13,23 @@ public class RemoveAction : ChangeAction
 {
     public int x;
     public int y;
-
+    public RemoveReason removeReason;
     Tile tile;
 
-    public RemoveAction(Board board, int x, int y, RemoveReason removeReason = RemoveReason.Destroy)
+    public RemoveAction(Board board, int x, int y, RemoveReason reasonForRemove = RemoveReason.Destroy)
         : base(board)
     {
         this.x = x;
         this.y = y;
         this.tile = board.GetTile(x, y);
+        this.removeReason = reasonForRemove;
 
         // data logic
+        if(reasonForRemove == RemoveReason.PlayerInput)
+        {
+            this.tile.DestroyTile();
+        }
+        
         board.SetTileType(x, y, TileTypes.None);
 
         board.SetTile(x, y, null);

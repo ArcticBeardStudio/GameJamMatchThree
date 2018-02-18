@@ -107,7 +107,6 @@ public class Board : MonoBehaviour
                 createStack.Add(new CreateAction(this, x, y, tileType));
             }
         }
-        Debug.Log("Added this many new elements: " + iterator);
         createStack.End();
     }
 
@@ -189,12 +188,10 @@ public class Board : MonoBehaviour
         {
             matches = matches.Union(GetAllMatches(swapInfo)).ToList();
         }
-        Debug.Log("Matches found: " + matches.Count);
         //Enter here if the player made the swap and there's no match, swap back the tiles
         if(history.Count == 1 && history[0].swapReason == SwapReason.PlayerInput && matches.Count < 3)
         {
             swapStack.Begin();
-            Debug.Log("Didnt find a match, swap back");
             swapStack.Add(new SwapAction(this,
                                     history[0].p1,
                                     history[0].p2));
@@ -206,7 +203,7 @@ public class Board : MonoBehaviour
             removeStack.Begin();
             foreach (Tile tile in matches)
             {
-                removeStack.Add(new RemoveAction(this, tile.x, tile.y));
+                removeStack.Add(new RemoveAction(this, tile.x, tile.y, RemoveReason.PlayerInput));
             }
             removeStack.End();
         }
@@ -221,12 +218,7 @@ public class Board : MonoBehaviour
         // Do after create stuff
         if(!AnyPossibleMatch())
         {
-            Debug.Log("No possible match, destroy board");
             DestroyBoard();
-        }
-        else
-        {
-            Debug.Log("Found moves");
         }
         //Debug.Log("Create Done");
     }
@@ -271,12 +263,7 @@ public class Board : MonoBehaviour
         //If we didnt need to swap, then we refill the board
         if(swapStack.length <= 0)
         {
-            Debug.Log("Didnt need to swap, refill board");
             RefillBoard();
-        }
-        else
-        {
-            Debug.Log("Collapse columns");
         }
         swapStack.End();
     }

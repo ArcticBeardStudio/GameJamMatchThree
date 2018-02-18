@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4291368840313920}
-  - component: {fileID: 114419657316357532}
+  - component: {fileID: 114276064673119990}
   m_Layer: 0
   m_Name: GemRed
   m_TagString: Untagged
@@ -112,7 +112,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1948414807490822}
   m_Mesh: {fileID: 4300000, guid: b88458638a1b3224bb204198de684ddf, type: 3}
---- !u!114 &114419657316357532
+--- !u!114 &114276064673119990
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -120,9 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1135511127370006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3b0b215f8dbf1a46bfdfd1abd90bf21, type: 3}
+  m_Script: {fileID: 11500000, guid: 02fd725a758091642ac91c21e9726135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 661255e9aadeb864dad3d87dcfbe1661, type: 2}
   x: 0
   y: 0
+  gem: 4

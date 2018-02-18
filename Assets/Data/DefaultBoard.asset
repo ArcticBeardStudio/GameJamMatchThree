@@ -11,14 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478ec201df454a247a46fac57721196d, type: 3}
   m_Name: DefaultBoard
   m_EditorClassIdentifier: 
-  width: 3
-  height: 5
+  width: 5
+  height: 7
   tileWidth: 1
   tileHeight: 1
   tilePrefabs:
-  - {fileID: 114754462404841514, guid: a391e21999c4d8b4394fc9cf6424a4e4, type: 2}
-  - {fileID: 114636096635606778, guid: a78ce8f838473874b807b52c3c75d0f6, type: 2}
+  - {fileID: 114279691802465786, guid: a391e21999c4d8b4394fc9cf6424a4e4, type: 2}
+  - {fileID: 114958381598252032, guid: a78ce8f838473874b807b52c3c75d0f6, type: 2}
   - {fileID: 114721950182963458, guid: fa1e5c3e8c33f244b9d2afdd2cfbef45, type: 2}
-  - {fileID: 114419657316357532, guid: e80b267d6b60a78488d1d277c1b1777e, type: 2}
-  - {fileID: 114605618950731190, guid: 036095d56b6f324458730e0820deec16, type: 2}
-  - {fileID: 114978792186663408, guid: aceb4a62384401b4d9cab5536a4dc627, type: 2}
+  - {fileID: 114276064673119990, guid: e80b267d6b60a78488d1d277c1b1777e, type: 2}
+  - {fileID: 114729302516437724, guid: 036095d56b6f324458730e0820deec16, type: 2}
+  - {fileID: 114518327783800288, guid: aceb4a62384401b4d9cab5536a4dc627, type: 2}

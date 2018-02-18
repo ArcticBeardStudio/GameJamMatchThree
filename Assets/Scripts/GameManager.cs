@@ -18,9 +18,26 @@ public class GameManager : MonoBehaviour
 
     public List<Player> players = new List<Player>();
 
+    private int currentPlayer = 0;
+    
     public static Player[] GetPlayers() { return null; }
     public static Player GetPlayer(int index) { return null; }
-    public static Player GetCurrentPlayer() { return null; }
+    public static Player GetCurrentPlayer()
+    {
+        return instance.players[instance.currentPlayer];
+    }
+    public static Player GetOpponentPlayer()
+    {
+        if(instance.currentPlayer == 0)
+        {
+            return instance.players.Count >= 2 ? instance.players[1] : null;
+        }
+        else if (instance.currentPlayer == 1)
+        {
+            return instance.players.Count >= 1 ? instance.players[0] : null;
+        }
+        return null;
+    }
 
     public bool IsPlaying() { return false; }
     public bool CanPlayerMove(int index) { return false; }
@@ -29,7 +46,7 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameStates.PrePlay;
     }
-
+    
     void Awake()
     {
         if (!instance)
