@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DigitalRuby.Tween;
 
+public enum RemoveReason
+{
+    PlayerInput,
+    Destroy
+}
+
 public class RemoveAction : ChangeAction
 {
     public int x;
@@ -10,7 +16,7 @@ public class RemoveAction : ChangeAction
 
     Tile tile;
 
-    public RemoveAction(Board board, int x, int y)
+    public RemoveAction(Board board, int x, int y, RemoveReason removeReason = RemoveReason.Destroy)
         : base(board)
     {
         this.x = x;
