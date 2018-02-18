@@ -111,6 +111,19 @@ public class Board : MonoBehaviour
         createStack.End();
     }
 
+    private void DestroyBoard()
+    {
+        removeStack.Begin();
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                removeStack.Add(new RemoveAction(this, x, y));
+            }
+        }
+        removeStack.End();
+    }
+
     public Vector3 GetTileLocalPosition(int x, int y)
     {
         return new Vector3(((x + 0.5f) - width * 0.5f) * tileWidth, ((y + 0.5f) - height * 0.5f) * tileHeight);
@@ -206,6 +219,15 @@ public class Board : MonoBehaviour
     public void CreateResolved(List<CreateAction> history)
     {
         // Do after create stuff
+        if(!AnyPossibleMatch())
+        {
+            Debug.Log("No possible match, destroy board");
+            DestroyBoard();
+        }
+        else
+        {
+            Debug.Log("Found moves");
+        }
         //Debug.Log("Create Done");
     }
     public void RemoveResolved(List<RemoveAction> history)
@@ -280,7 +302,7 @@ public class Board : MonoBehaviour
 
         int nextX;
         int nextY;
-
+        var startType = GetTileType(startX, startY);
         int maxValue = (width > height) ? width : height;
 
         for (int i = 1; i < maxValue - 1; i++)
@@ -300,7 +322,6 @@ public class Board : MonoBehaviour
             }
             else
             {
-                var startType = GetTileType(startX, startY);
                 var nextType = GetTileType(nextX, nextY);
                 if (startType == nextType)
                 {
@@ -395,4 +416,130 @@ public class Board : MonoBehaviour
         return false;
     }
 
+    private bool AnyPossibleMatch()
+    {        
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                var tileType = GetTileType(x, y);
+                if(PossibleHorizontalMatches(x,y,tileType) || PossibleVerticalMatches(x,y,tileType) || PossibleMiddleMatch(x,y,tileType))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private bool PossibleHorizontalMatches(int x, int y, TileTypes tileType)
+    {
+        //S = StartTile
+        //0 = Not checked
+        //1 = Check these for the same tileType as S
+        
+        //If we're within bounds three to the right, check for right possible matches S,0,1,1
+        if (IsWithinBounds(x+3,y))
+        {
+            if(GetTileType(x+2,y) == tileType && GetTileType(x+3,y) == tileType)
+            {
+                return true;
+            }
+        }
+        //If we're within bounds three to the left, check for left possible matches 1,1,0,S
+        if (IsWithinBounds(x-3,y))
+        {
+            if (GetTileType(x - 2, y) == tileType && GetTileType(x - 3, y) == tileType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PossibleVerticalMatches(int x, int y, TileTypes tileType)
+    {
+        //S = StartTile
+        //0 = Not checked
+        //1 = Check these for the same tileType as S
+
+        //If we're within bounds three upwards, check for upwards possible matches 
+        //1
+        //1
+        //0
+        //S
+        if (IsWithinBounds(x, y+3))
+        {
+            if (GetTileType(x, y+2) == tileType && GetTileType(x, y+3) == tileType)
+            {
+                return true;
+            }
+        }
+
+        //If we're within bounds three downwards, check for downwards possible matches 
+        //S
+        //0
+        //1
+        //1
+        if (IsWithinBounds(x, y-3))
+        {
+            if (GetTileType(x, y-2) == tileType && GetTileType(x, y-3) == tileType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PossibleMiddleMatch(int x, int y, TileTypes tileType)
+    {
+        //Check for upwards middlematch
+        //1 0 1
+        //0 S 0
+        if (IsWithinBounds(x - 1, y + 1) && IsWithinBounds(x + 1, y + 1))
+        {
+            if (GetTileType(x - 1, y + 1) == tileType && GetTileType(x + 1, y + 1) == tileType)
+            {
+                return true;
+            }
+        }
+
+        //Check for downwards middlematch
+        //0 S 0
+        //1 0 1
+        if (IsWithinBounds(x - 1, y - 1) && IsWithinBounds(x + 1, y - 1))
+        {
+            if (GetTileType(x - 1, y - 1) == tileType && GetTileType(x + 1, y - 1) == tileType)
+            {
+                return true;
+            }
+        }
+
+        //Check for left middlematch
+        //1 0
+        //0 S
+        //1 0
+        if (IsWithinBounds(x - 1, y - 1) && IsWithinBounds(x - 1, y + 1))
+        {
+            if (GetTileType(x - 1, y - 1) == tileType && GetTileType(x - 1, y + 1) == tileType)
+            {
+                return true;
+            }
+        }
+
+        //Check for right middlematch
+        //0 1
+        //S 0
+        //0 1
+        if (IsWithinBounds(x + 1, y - 1) && IsWithinBounds(x + 1, y + 1))
+        {
+            if (GetTileType(x + 1, y - 1) == tileType && GetTileType(x + 1, y + 1) == tileType)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
