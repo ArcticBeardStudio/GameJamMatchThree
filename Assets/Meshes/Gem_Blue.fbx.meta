@@ -6,13 +6,27 @@ ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
+    100002: BezierCircle_L_Lib
+    100004: Diamond
     400000: //RootNode
+    400002: BezierCircle_L_Lib
+    400004: Diamond
     2100000: Material.007
     2100002: BlueMaterial
     2300000: //RootNode
+    2300002: BezierCircle_L_Lib
+    2300004: Diamond
     3300000: //RootNode
+    3300002: BezierCircle_L_Lib
+    3300004: Diamond
     4300000: Diamond
-  externalObjects: {}
+    4300002: BezierCircle_L_Lib
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BlueMaterial
+    second: {fileID: 2100000, guid: 04e9a348585d4ae439f5d9efda614f1e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
