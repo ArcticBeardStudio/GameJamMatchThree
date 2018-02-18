@@ -18,6 +18,7 @@ public class Board : MonoBehaviour
 {
     public bool debug;
     public BoardSettings settings;
+    public SearchPattern pattern;
     int width { get { return settings.width; } }
     int height { get { return settings.height; } }
     float tileWidth { get { return settings.tileWidth; } }
