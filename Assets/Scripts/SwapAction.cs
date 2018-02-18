@@ -25,7 +25,7 @@ public class SwapAction : ChangeAction
 
     float startTime;
     float progress;
-    float duration = 1.0f;
+    float duration = 0.5f;
 
     bool isComplete1 = false;
     bool isComplete2 = false;
