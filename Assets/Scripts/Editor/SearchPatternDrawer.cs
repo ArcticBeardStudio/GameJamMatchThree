@@ -9,13 +9,16 @@ public class SearchPatternDrawer : PropertyDrawer
         EditorGUI.BeginProperty(position, label, property);
 
         // Name
-        Rect nameRect = new Rect(position.x, position.y, position.width - 100, position.height);
         SerializedProperty nameProp = property.FindPropertyRelative("name");
-        EditorGUI.PropertyField(nameRect, nameProp, GUIContent.none);
+        Rect nameRect = new Rect(position.x, position.y, position.width, position.height);
+        EditorGUI.PropertyField(nameRect, nameProp, new GUIContent("Name"));
 
-        // Size
-        Rect sizeWRect = new Rect(position.x + position.width - 100, position.y, 100, position.height);
-        int sizeW = EditorGUI.IntField(sizeWRect, "W", 0);
+        // Pattern
+        SerializedProperty patternProp = property.FindPropertyRelative("pattern");
+        int numLines = patternProp.stringValue.Split('\n').Length;
+        Rect patternRect = new Rect(position.x, position.y + position.height, position.width, (position.height) + (position.height - 3) * (numLines - 1));
+        
+        patternProp.stringValue = EditorGUI.TextArea(patternRect, patternProp.stringValue);
 
         EditorGUI.EndProperty();
     }
