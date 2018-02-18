@@ -194,7 +194,10 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Tile tile = hit.collider.GetComponent<Tile>();
-                
+                if(tile.board != this.board)
+                {
+                    return;
+                }
                 if (!selected)
                 {
                     selected = tile;
@@ -225,10 +228,6 @@ public class Player : MonoBehaviour
                     selected = null;
                 }
             }
-        }
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            ModifyHealth(-5);
         }
     }
 }

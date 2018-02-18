@@ -39,8 +39,31 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public bool IsPlaying() { return false; }
-    public bool CanPlayerMove(int index) { return false; }
+    public bool IsPlaying()
+    {
+        return false;
+    }
+
+    public bool CanPlayerMove(int index)
+    {
+        if(currentPlayer == index)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void ChangePlayer()
+    {
+        if(currentPlayer == 0)
+        {
+            currentPlayer = 1;
+        }
+        else
+        {
+            currentPlayer = 0;
+        }
+    }
 
     void Init()
     {
@@ -53,6 +76,14 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             Init();
+        }
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangePlayer();
         }
     }
 }
